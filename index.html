@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <title>Seznamy a tabulky</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+</head>
+<body>
+    <h1>Seznamy a tabulky</h1>
+        <h2><span class="triangle">&#9654;</span><span class="afterTriangle">Tvorba seznamů</span></h2>
+            <h3>Uspořádaný seznam</h3>
+            <ol>
+                <li>Google Chrome</li>
+                <li>Internet Explorer</li>
+                <li>Mozzila Firefox</li>
+            </ol>
+            <h3>Neuspořádaný seznam (unordered list)</h3>
+            <ul>
+                <li>IP adresy (např. IPv4: 192.168.23.1, IPv6: )</li>
+                <li>DNS adresy (např. strojka.opava.cz)</li>
+                <li>URL adresy (např. http://moodle.sspu-opava.cz:81/course/view.php?id=95)</li>
+            </ul>
+            <h3>Vnořený seznam</h3>
+            <ul>
+                <li>Hardware
+                <ol>
+                    <li>Základní jednotka
+                    <ol>
+                        <li>procesor (CPU)</li>
+                        <li>paměť (RAM)</li>
+                        <li>pevný disk (HDD)</li>
+                    </ol>
+                    </li>
+                    <li>Vstupní zařízení
+                    <ol>
+                        <li>klávesnice</li>
+                        <li>myš</li>
+                    </ol>
+                    </li>
+                    <li>Výstupní zařízení
+                    <ol>
+                        <li>monitor</li>
+                        <li>tiskárna</li>
+                    </ol>
+                    </li>
+                </ol>
+            </li>
+                <li>Software
+                    <ol>
+                        <li>Základní programové vybavení
+                        <ol>
+                            <li>operační systém</li>
+                            <li>ovladač</li>
+                            <li>firmware</li>
+                        </ol>
+                        </li>
+                        <li>Aplikace
+                        <ol>
+                            <li>textový editor</li>
+                            <li>prohlížeč</li>
+                            <li>antivirový program</li>
+                        </ol>
+                        </li>
+                    </ol>
+                </li>
+            </ul>
+            <h3>Popisný seznam (description list)</h3>
+            <dl>
+                <dt>Internet Society (ISOC)</dt>
+                <dd>Mezinárodní organizace pro globální koordinaci a kooperaci v rámci internetu</dd>
+                <dt>World Wide Web Consortium (W3C)</dt>
+                <dd>Mezinároní konsorcium, jehož členové společně s veřejností vyvíjejí webové standardy pro službu WWW</dd>
+                <dt>Internet Assigned Numbers Authority (IANA)</dt>
+                <dd>Organizace, která dohlíží celosvětově na přidělování IP adres, správu kořenových zón DNS, definování typů pro MIME a další náležitosti internetových protokolů.</dd>
+            </dl>
+            <h2><span class="triangle">&#9654;</span><span class="afterTriangle">Tvorba tabulek</span></h2>
+        Komplexní tabulka v HTML může být tvořena záhlavím, tělem a zápatím. Pomocí atributů <b>colspan</b> a <b>rowspan</b> můžeme vytvořit sloučené buňky, které přesahují přes více sloupců i řádků.<br><br>
+        <table>
+            <caption>Studijní obory na SŠPU Opava - školní rok 2016/17</caption>
+            <tbody>
+                <tr class="blueTop">
+                    <td rowspan="2">Název Oboru</td>
+                    <td rowspan="2">Kód oboru</td>
+                    <td rowspan="2">Počet tříd</td>
+                    <td colspan="3">Počty žáků</td>
+                </tr>
+                <tr class="blueTop">
+                    <td>Chlapci</td>
+                    <td>Dívky</td>
+                    <td>Celkem</td>
+                </tr>
+                <tr>
+                    <td>Informační technologie</td>
+                    <td>18-20-M/01</td>
+                    <td class="right">4</td>
+                    <td class="right">104</td>
+                    <td class="right">1</td>
+                    <td class="right">105</td>
+                </tr>
+                <tr>
+                    <td>Strojírenství</td>
+                    <td>23-41-M/01</td>
+                    <td class="right">5</td>
+                    <td class="right">135</td>
+                    <td class="right">1</td>
+                    <td class="right">136</td>
+                </tr>
+                <tr>
+                    <td>Umělecké obory</td>
+                    <td>82-41M/04, 82-41-M/08, 82-41-M/08</td>
+                    <td class="right">4</td>
+                    <td class="right">20</td>
+                    <td class="right">74</td>
+                    <td class="right">94</td>
+                </tr>
+                <tr class="blueBottom">
+                    <td colspan="2">Celkové údaje</td>
+                    <td class="red">13 tříd</td>
+                    <td class="red" colspan="3">335 žáků</td>
+                </tr>
+            </tbody>
+        </table>
+        <br><br>
+<footer>
+    <p>&copy; 2024 František Rubáček</p>
+</body>
+</html>
