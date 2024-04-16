@@ -96,18 +96,7 @@ li {
 }
 
 
-/* Nastavte pravidlo pro všechny odstavce-poznámky: 
-  * na levém okraji bude šedé ohraničení 10px silné
-  * text bude zleva odsazen o 50 pixelů
-  * použité font bude o 10% menší než základní písmo
-  * písmo bude nakloněné (kurzíva)
-*/
-p.poznamka {
-  border-left: 10px solid gray;
-  padding-left: 50px;
-  font-size: 90%;
-  font-style: italic;
-}
+
 
 footer {
   color: gray;
@@ -141,4 +130,17 @@ abbr {
 
 code {
   font-family: "Courier New", monospace;
+}
+
+/* Nastavte pravidlo pro všechny odstavce-poznámky: 
+  * na levém okraji bude šedé ohraničení 10px silné
+  * text bude zleva odsazen o 50 pixelů
+  * použité font bude o 10% menší než základní písmo
+  * písmo bude nakloněné (kurzíva)
+*/
+p.poznamka {
+  border-left: 10px solid gray;
+  padding-left: 50px;
+  font-size: 90%;
+  font-style: italic;
 }
