@@ -128,6 +128,11 @@ strong {
   font-weight: bold;
 }
 
+.big {
+  font-size: 1em;
+  font-weight: bold;
+}
+
 
 /* Nastavte pravidla pro zna�ky vlo�en� do textu �vodn�ho odstavce,
    aby kone�n� vzheld textu odpov�dal p�edloze. */
@@ -143,4 +148,8 @@ abbr {
   text-decoration: underline;
   text-decoration-style: dashed;
   text-decoration-color: red;
+}
+
+code {
+  font-family: "Courier New", monospace;
 }
