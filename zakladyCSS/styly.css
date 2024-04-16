@@ -135,4 +135,12 @@ p.intro em {
   font-style: italic;
   color: rgb(102,153,0);
 }
+mark {
+  background-color: rgb(102,153,0);
+}
 
+abbr {
+  text-decoration: underline;
+  text-decoration-style: dashed;
+  text-decoration-color: red;
+}
