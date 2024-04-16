@@ -95,13 +95,6 @@ li {
   margin-left: 20px;
 }
 
-/* Nastavte pravidlo pro v�echny tu�n� a mod�e zv�razn�n� texty v odr�k�ch. */
-strong, em {
-  /* Barva textu bude modr� */
-  color: lightskyblue;
-  /* Text bude tu�n� */
-  font-weight: bold;
-}
 
 /* Nastavte pravidlo pro všechny odstavce-poznámky: 
   * na levém okraji bude šedé ohraničení 10px silné
@@ -109,7 +102,7 @@ strong, em {
   * použité font bude o 10% menší než základní písmo
   * písmo bude nakloněné (kurzíva)
 */
-.poznamka {
+p.poznamka {
   border-left: 10px solid gray;
   padding-left: 50px;
   font-size: 90%;
@@ -126,21 +119,15 @@ footer {
 
 strong {
   font-weight: bold;
+  color: lightskyblue;
 }
 
 strong.big {
-  font-size: 1em;
   font-weight: bold;
   color: black;
 }
 
 
-/* Nastavte pravidla pro zna�ky vlo�en� do textu �vodn�ho odstavce,
-   aby kone�n� vzheld textu odpov�dal p�edloze. */
-p.intro em {  
-  font-style: italic;
-  color: rgb(102,153,0);
-}
 mark {
   background-color: rgb(102,153,0);
   color: white;
