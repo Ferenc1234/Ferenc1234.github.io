@@ -98,16 +98,7 @@ li {
 
 
 
-footer {
-  color: gray;
-  margin: 10px auto;
-  text-align: center;
-  font-size: 80%;
-  /* Add the following property to center the footer */
-  position: fixed;
-  left: 50%;
-  transform: translateX(-50%);
-}
+
 
 strong {
   font-weight: bold;
@@ -146,4 +137,12 @@ p.poznamka {
   padding-left: 50px;
   font-size: 90%;
   font-style: italic;
+}
+
+footer {
+  color: gray;
+  margin: 10px auto;
+  font-size: 80%;
+  text-align: center;
+}
 }
