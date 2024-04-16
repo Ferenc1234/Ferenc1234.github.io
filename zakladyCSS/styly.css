@@ -101,9 +101,12 @@ li {
 footer {
   color: gray;
   margin: 10px auto;
-  /* Z�pat� bude zarovn�no na st�ed */
   text-align: center;
   font-size: 80%;
+  /* Add the following property to center the footer */
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 strong {
