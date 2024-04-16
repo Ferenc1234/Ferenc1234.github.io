@@ -98,7 +98,7 @@ li {
 /* Nastavte pravidlo pro v�echny tu�n� a mod�e zv�razn�n� texty v odr�k�ch. */
 strong, em {
   /* Barva textu bude modr� */
-  color: blue;
+  color: lightskyblue;
   /* Text bude tu�n� */
   font-weight: bold;
 }
@@ -109,7 +109,7 @@ strong, em {
   * použité font bude o 10% menší než základní písmo
   * písmo bude nakloněné (kurzíva)
 */
-p.note {
+.poznamka {
   border-left: 10px solid gray;
   padding-left: 50px;
   font-size: 90%;
@@ -128,9 +128,10 @@ strong {
   font-weight: bold;
 }
 
-.big {
+strong.big {
   font-size: 1em;
   font-weight: bold;
+  color: black;
 }
 
 
@@ -142,6 +143,7 @@ p.intro em {
 }
 mark {
   background-color: rgb(102,153,0);
+  color: white;
 }
 
 abbr {
