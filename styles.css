@@ -1,0 +1,14 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+h1 {
+    text-align: center;
+}
+
+button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
