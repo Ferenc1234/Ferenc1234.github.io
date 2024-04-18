@@ -144,5 +144,8 @@ footer {
   margin: 10px auto;
   font-size: 80%;
   text-align: center;
-}
+  /* Center the footer on the page */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
