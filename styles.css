@@ -9,6 +9,7 @@ html {
 
 body {
     display: table-cell;
+    background-color: #333;
     vertical-align: middle;
 }
 
@@ -78,7 +79,6 @@ footer {
     vertical-align: middle;
     text-align: center;
 }
-
 .button-85 {
   padding: 0.6em 2em;
   border: none;
@@ -92,6 +92,8 @@ footer {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+  margin: auto;
+  display: block;
 }
 
 .button-85:before {
