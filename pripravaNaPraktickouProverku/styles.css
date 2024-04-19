@@ -1,0 +1,23 @@
+table {
+    border-collapse: collapse;
+    border-radius: 10px;
+}
+
+table td, table th {
+    padding: 10px;
+    border: 1px solid black;
+}
+
+thead {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+ul.tabulka {
+    text-align:left;
+}
+
+footer {
+    color: black;
+    text-align: center;
+}
