@@ -30,14 +30,14 @@ World.add(world, ground);
 
 // Create a function to create a pyramid of circles
 function createPyramid(baseX, baseY, radius, rows) {
-  let offsetX = 0; // Horizontal offset for each row
-  let offsetY = radius * 8; // Vertical offset between rows
+  let offsetX = -32; // Horizontal offset for each row
+  let offsetY = radius * 7; // Vertical offset between rows
   
   for (let row = 1; row <= rows; row++) {
     // For each row, create an increasing number of circles
     for (let i = 0; i < row + 2; i++) {
       let x = baseX + offsetX + i * (radius * 8); // Horizontal positioning
-      let y = baseY + offsetY * row; // Vertical positioning
+      let y = baseY + offsetY * row - 95; // Vertical positioning
 
       // Create the circle and add it to the world
       const plinko = Bodies.circle(x, y, radius, {
@@ -49,18 +49,18 @@ function createPyramid(baseX, baseY, radius, rows) {
       World.add(world, plinko);
     }
     // Adjust the horizontal offset for the next row (center alignment)
-    offsetX -= radius; 
+    offsetX -= 16; 
   }
 }
 
-// Create a pyramid starting at a specific position with a radius of 7 and 5 rows
-createPyramid(0.5 * window.innerWidth, window.innerHeight / 2, 4, 5);
+// Create a pyramid starting at a specific position with a radius of 4 and 5 rows
+createPyramid(250,250, 4, 8);
 
 
 // Function to spawn a new ball
 function spawnBall() {
-  const ball = Bodies.circle((0.5 * window.innerWidth) + (Math.random() * 10) - 5, 100, 10, {
-    restitution: 0.7, 
+  const ball = Bodies.circle(250 + (Math.random() * 10) - 5, 150, 12, {
+    restitution: 1, 
     render: {
       fillStyle: 'blue'
     },
