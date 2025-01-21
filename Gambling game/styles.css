@@ -6,7 +6,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh; /* Ensure body takes full viewport height */
-    background: #faf8ed
+    background: #47434B
   }
       canvas {
         display: block;

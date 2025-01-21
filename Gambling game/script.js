@@ -4,6 +4,7 @@ const { Engine, Render, World, Bodies, Body } = Matter
 // Create an engine
 const engine = Engine.create()
 const world = engine.world
+const defaultMoney = 1000
 
 // Create a renderer
 const render = Render.create({
@@ -18,7 +19,7 @@ const render = Render.create({
 })
 
 // Create ground
-const ground = Bodies.rectangle(250, 500 - 15, 500, 30, {
+const ground = Bodies.rectangle(250, 500 - 25, 500, 50, {
   isStatic: true,
   render: {
     fillStyle: "#f95a37",
@@ -52,10 +53,21 @@ function createPyramid(baseX, baseY, radius, rows) {
     // Adjust the horizontal offset for the next row (center alignment)
     offsetX -= 16
   }
+  for (let i = 0; i < 12 + 2; i++) {
+      let x = baseX + offsetX+ 16 + i * (radius * 8) // Horizontal positioning
+      let y = baseY + offsetY * 13 - 95
+      const bars = Bodies.rectangle(x, y, radius * 2, 55, {
+        isStatic: true,
+        render: {
+          fillStyle: "grey",
+        },
+      })
+      World.add(world, bars)
+  }
 }
 
 // Create a pyramid starting at a specific position with a radius of 4 and 5 rows
-createPyramid(250, 150, 4, 13)
+createPyramid(250, 150, 4, 12)
 
 // Function to spawn a new ball
 function spawnBall() {
@@ -74,10 +86,16 @@ function spawnBall() {
   World.add(world, ball)
 }
 
+function money() {
+  
+  console.log(score);
+}
+
 // Button click event to spawn a new ball
 document.getElementById("spawnBtn").addEventListener("click", spawnBall)
 
 // Run the engine and renderer
 engine.world.gravity.y = 2
+money()
 Engine.run(engine)
 Render.run(render)
