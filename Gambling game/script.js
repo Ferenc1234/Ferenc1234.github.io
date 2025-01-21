@@ -28,10 +28,19 @@ const ground = Bodies.rectangle(400, window.innerHeight - 30, window.innerWidth,
 // Add ground to the world
 World.add(world, ground);
 
+const plinko = Bodies.circle(0.5 * window.innerWidth, window.innerHeight / 2, 7, {
+  isStatic: true,
+  render: {
+    fillStyle: 'grey'
+  }
+});
+
+World.add(world, plinko);
+
 // Function to spawn a new ball
 function spawnBall() {
-  const ball = Bodies.circle(Math.random() * window.innerWidth, 100, 40, {
-    restitution: 0.7, // bounciness of the ball
+  const ball = Bodies.circle(0.5 * window.innerWidth, 100, 5, {
+    restitution: 1, 
     render: {
       fillStyle: 'blue'
     }
