@@ -10,15 +10,15 @@ const render = Render.create({
   element: document.body,
   engine: engine,
   options: {
-    width: window.innerWidth,
-    height: window.innerHeight,
+    width: 500,
+    height: 500,
     wireframes: false,
-    background: '#f4f4f4',
+    background: '#000000',
   }
 });
 
 // Create ground
-const ground = Bodies.rectangle(400, window.innerHeight - 30, window.innerWidth, 60, {
+const ground = Bodies.rectangle(250, 500-15, 500, 30, {
   isStatic: true,
   render: {
     fillStyle: 'green'
@@ -28,24 +28,47 @@ const ground = Bodies.rectangle(400, window.innerHeight - 30, window.innerWidth,
 // Add ground to the world
 World.add(world, ground);
 
-const plinko = Bodies.circle(0.5 * window.innerWidth, window.innerHeight / 2, 7, {
-  isStatic: true,
-  render: {
-    fillStyle: 'grey'
-  }
-});
+// Create a function to create a pyramid of circles
+function createPyramid(baseX, baseY, radius, rows) {
+  let offsetX = 0; // Horizontal offset for each row
+  let offsetY = radius * 8; // Vertical offset between rows
+  
+  for (let row = 1; row <= rows; row++) {
+    // For each row, create an increasing number of circles
+    for (let i = 0; i < row + 2; i++) {
+      let x = baseX + offsetX + i * (radius * 8); // Horizontal positioning
+      let y = baseY + offsetY * row; // Vertical positioning
 
-World.add(world, plinko);
+      // Create the circle and add it to the world
+      const plinko = Bodies.circle(x, y, radius, {
+        isStatic: true,
+        render: {
+          fillStyle: 'grey',
+        },
+      });
+      World.add(world, plinko);
+    }
+    // Adjust the horizontal offset for the next row (center alignment)
+    offsetX -= radius; 
+  }
+}
+
+// Create a pyramid starting at a specific position with a radius of 7 and 5 rows
+createPyramid(0.5 * window.innerWidth, window.innerHeight / 2, 4, 5);
+
 
 // Function to spawn a new ball
 function spawnBall() {
-  const ball = Bodies.circle(0.5 * window.innerWidth, 100, 5, {
-    restitution: 1, 
+  const ball = Bodies.circle((0.5 * window.innerWidth) + (Math.random() * 10) - 5, 100, 10, {
+    restitution: 0.7, 
     render: {
       fillStyle: 'blue'
+    },
+    collisionFilter: {
+      group: -1  // This ensures the ball does not collide with itself (objects in the same group don't collide)
     }
   });
-
+		
   // Add the ball to the world
   World.add(world, ball);
 }
@@ -56,11 +79,3 @@ document.getElementById('spawnBtn').addEventListener('click', spawnBall);
 // Run the engine and renderer
 Engine.run(engine);
 Render.run(render);
-
-// Resize the canvas dynamically when the window size changes
-window.addEventListener('resize', () => {
-  render.options.width = window.innerWidth;
-  render.options.height = window.innerHeight;
-  render.canvas.width = window.innerWidth;
-  render.canvas.height = window.innerHeight;
-});
