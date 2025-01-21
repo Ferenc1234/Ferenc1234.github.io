@@ -22,7 +22,8 @@ const ground = Bodies.rectangle(250, 500-15, 500, 30, {
   isStatic: true,
   render: {
     fillStyle: 'green'
-  }
+  },
+  label: 'ground'
 });
 
 // Add ground to the world
@@ -54,28 +55,35 @@ function createPyramid(baseX, baseY, radius, rows) {
 }
 
 // Create a pyramid starting at a specific position with a radius of 4 and 5 rows
-createPyramid(250,250, 4, 8);
+createPyramid(250,150, 4, 13);
+
 
 
 // Function to spawn a new ball
 function spawnBall() {
-  const ball = Bodies.circle(250 + (Math.random() * 10) - 5, 150, 12, {
+  const ball = Bodies.circle(250 + (Math.random() * 12) - 6, 60, 12, {
     restitution: 1, 
     render: {
       fillStyle: 'blue'
     },
+    label: 'Ball',
     collisionFilter: {
       group: -1  // This ensures the ball does not collide with itself (objects in the same group don't collide)
     }
+    
   });
 		
   // Add the ball to the world
   World.add(world, ball);
 }
 
+
+
 // Button click event to spawn a new ball
 document.getElementById('spawnBtn').addEventListener('click', spawnBall);
 
+
 // Run the engine and renderer
+engine.world.gravity.y = 2;
 Engine.run(engine);
 Render.run(render);
