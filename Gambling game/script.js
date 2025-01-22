@@ -26,11 +26,6 @@ const ground = Bodies.rectangle(250, 500 - 25, 500, 50, {
     fillStyle: "#f95a37",
   },
   label: "ground",
-  text: {
-      content: "FN",
-      color: "black",
-      size: 15
-    }
 })
 
 // Add ground to the world
@@ -63,7 +58,7 @@ function createPyramid(baseX, baseY, radius, rows) {
   for (let i = 0; i < 12 + 2; i++) {
     let x = baseX + offsetX + 16 + i * (radius * 8) // Horizontal positioning
     let y = baseY + offsetY * 13 - 95
-    const bars = Bodies.rectangle(x, y, radius * 2, 55, {
+    const bars = Bodies.rectangle(x, y + 1, radius * 2, 60, {
       isStatic: true,
       render: {
         fillStyle: "grey",
@@ -100,35 +95,42 @@ function spawnBall() {
 
 function moneyCounter() {
   money = money - priceForBall
-  console.log(money)
-  document.getElementById("moneyCount").innerHTML = "your money: "+money.toFixed(1)
+  console.log("bought 1 ball, new account balance is: " + money)
+  document.getElementById("moneyCount").innerHTML =
+    "Your Money: " + money.toFixed(1) + "$"
 }
 
 // Add collision event listener
-Matter.Events.on(engine, "collisionStart", event => {
-  event.pairs.forEach(collision => {
-    const { bodyA, bodyB } = collision;
+Matter.Events.on(engine, "collisionStart", (event) => {
+  event.pairs.forEach((collision) => {
+    const { bodyA, bodyB } = collision
 
     // Check if the collision is between a ball and the ground
-    if ((bodyA.label === "Ball" && bodyB.label === "ground") || 
-        (bodyA.label === "ground" && bodyB.label === "Ball")) {
+    if (
+      (bodyA.label === "Ball" && bodyB.label === "ground") ||
+      (bodyA.label === "ground" && bodyB.label === "Ball")
+    ) {
       // Set the ball's color to red
-      const ball = bodyA.label === "Ball" ? bodyA : bodyB;
+      const ball = bodyA.label === "Ball" ? bodyA : bodyB
       const distanceFromCenter = ball.position.x - 250
-      const holeNumber = Math.round((Math.abs(distanceFromCenter)+32)/32);
-      console.log("Hole number "+holeNumber)
+      const holeNumber = Math.round((Math.abs(distanceFromCenter) + 32) / 32)
+      console.log("------------NEW DROP------------")
+      console.log("Old balance: " + money + "$")
+      console.log("Hole number " + holeNumber)
       Matter.World.remove(world, ball)
-      money = money + (holeNumber * (holeNumber+2))
-      document.getElementById("moneyCount").innerHTML = "your money: "+money.toFixed(1)
-
+      money = money + holeNumber * (holeNumber + 2)
+      console.log("Added " + holeNumber * (holeNumber + 2) + "$ to account")
+      document.getElementById("moneyCount").innerHTML =
+        "Your Money: " + money.toFixed(1) + "$"
+      console.log("New balance: " + money + "$")
     }
-  });
-});
-
+  })
+})
 
 // Button click event to spawn a new ball
 document.getElementById("spawnBtn").addEventListener("click", spawnBall)
-document.getElementById("moneyCount").innerHTML = "your money: "+money.toFixed(1)
+document.getElementById("moneyCount").innerHTML =
+  "Your Money: " + money.toFixed(1) + "$"
 
 // Run the engine and renderer
 engine.world.gravity.y = 2
