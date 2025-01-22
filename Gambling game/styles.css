@@ -1,29 +1,45 @@
 body {
-    margin: 0;
-    overflow: hidden;
-    font-family: Arial, sans-serif;
+  overflow: hidden;
+  font-family: "Dongle", serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* pěkně ve středu */
+  background: #47434b;
+
+}
+canvas {
+  display: block;
+  border-radius: 15px;
+  margin-left: 30px;
+}
+ .container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh; /* Ensure body takes full viewport height */
-    background: #47434B
+    align-items: flex-start; /* Align the top of the left column with the top of the canvas */
   }
-      canvas {
-        display: block;
-        border-radius: 15px;
-      }
-      #spawnBtn {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        background-color: #a7bf2e;
-        color: white;
-        border: none;
-        border-radius: 5px;
-      }
-      #spawnBtn:hover {
-        background-color: #6C9100;
-      }
+.leftPanel {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px; /* Add some margin for better appearance */
+}
+button {
+  padding: 10px 30px;
+  font-family: "Dongle", serif;
+  font-size: 30px;
+  cursor: pointer;
+  background-color: #a7bf2e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+.money {
+  padding: 10px 30px;
+  font-size: 30px;
+  background-color: #54CBAB;
+  color: white;
+  border: none;
+  border-radius: 5px;
+}
+button:hover {
+  background-color: #6c9100;
+}

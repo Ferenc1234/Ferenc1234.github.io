@@ -4,7 +4,8 @@ const { Engine, Render, World, Bodies, Body } = Matter
 // Create an engine
 const engine = Engine.create()
 const world = engine.world
-const defaultMoney = 1000
+let money = 1000
+const priceForBall = 10
 
 // Create a renderer
 const render = Render.create({
@@ -54,15 +55,15 @@ function createPyramid(baseX, baseY, radius, rows) {
     offsetX -= 16
   }
   for (let i = 0; i < 12 + 2; i++) {
-      let x = baseX + offsetX+ 16 + i * (radius * 8) // Horizontal positioning
-      let y = baseY + offsetY * 13 - 95
-      const bars = Bodies.rectangle(x, y, radius * 2, 55, {
-        isStatic: true,
-        render: {
-          fillStyle: "grey",
-        },
-      })
-      World.add(world, bars)
+    let x = baseX + offsetX + 16 + i * (radius * 8) // Horizontal positioning
+    let y = baseY + offsetY * 13 - 95
+    const bars = Bodies.rectangle(x, y, radius * 2, 55, {
+      isStatic: true,
+      render: {
+        fillStyle: "grey",
+      },
+    })
+    World.add(world, bars)
   }
 }
 
@@ -71,31 +72,59 @@ createPyramid(250, 150, 4, 12)
 
 // Function to spawn a new ball
 function spawnBall() {
-  const ball = Bodies.circle(250 + Math.random() * 12 - 6, 60, 12, {
-    restitution: 1,
-    render: {
-      fillStyle: "#a7bf2e",
-    },
-    label: "Ball",
-    collisionFilter: {
-      group: -1, // This ensures the ball does not collide with itself (objects in the same group don't collide)
-    },
-  })
+  if (money >= 0 + priceForBall) {
+    moneyCounter()
+    const ball = Bodies.circle(250 + Math.random() * 12 - 6, 60, 12, {
+      restitution: 1,
+      render: {
+        fillStyle: "#a7bf2e",
+      },
+      label: "Ball",
+      collisionFilter: {
+        group: -1, // This ensures the ball does not collide with itself (objects in the same group don't collide)
+      },
+    })
 
-  // Add the ball to the world
-  World.add(world, ball)
+    // Add the ball to the world
+    World.add(world, ball)
+  } else {
+    console.log("user ran out of money, hooray!")
+  }
 }
 
-function money() {
-  
-  console.log(score);
+function moneyCounter() {
+  money = money - priceForBall
+  console.log(money)
+  document.getElementById("moneyCount").innerHTML = "your money: "+money
 }
+
+// Add collision event listener
+Matter.Events.on(engine, "collisionStart", event => {
+  event.pairs.forEach(collision => {
+    const { bodyA, bodyB } = collision;
+
+    // Check if the collision is between a ball and the ground
+    if ((bodyA.label === "Ball" && bodyB.label === "ground") || 
+        (bodyA.label === "ground" && bodyB.label === "Ball")) {
+      // Set the ball's color to red
+      const ball = bodyA.label === "Ball" ? bodyA : bodyB;
+      const distanceFromCenter = ball.position.x - 250
+      const holeNumber = Math.round((Math.abs(distanceFromCenter)+32)/32);
+      console.log("Hole number "+holeNumber)
+      Matter.World.remove(world, ball)
+      money = money + parseFloat((holeNumber * 3.8).toFixed(2))
+      document.getElementById("moneyCount").innerHTML = "your money: "+money
+
+    }
+  });
+});
+
 
 // Button click event to spawn a new ball
 document.getElementById("spawnBtn").addEventListener("click", spawnBall)
+document.getElementById("moneyCount").innerHTML = "your money: "+money
 
 // Run the engine and renderer
 engine.world.gravity.y = 2
-money()
-Engine.run(engine)
+Matter.Runner.run(engine)
 Render.run(render)
