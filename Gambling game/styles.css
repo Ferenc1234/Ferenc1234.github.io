@@ -34,7 +34,9 @@ button {
 }
 .money {
   padding: 10px 30px;
+  width: 200px;
   font-size: 30px;
+  text-align: center;
   background-color: #54CBAB;
   color: white;
   border: none;

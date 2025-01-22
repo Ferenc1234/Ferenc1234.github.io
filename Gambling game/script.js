@@ -26,6 +26,11 @@ const ground = Bodies.rectangle(250, 500 - 25, 500, 50, {
     fillStyle: "#f95a37",
   },
   label: "ground",
+  text: {
+      content: "FN",
+      color: "black",
+      size: 15
+    }
 })
 
 // Add ground to the world
@@ -48,6 +53,7 @@ function createPyramid(baseX, baseY, radius, rows) {
         render: {
           fillStyle: "grey",
         },
+        friction: 0,
       })
       World.add(world, plinko)
     }
@@ -95,7 +101,7 @@ function spawnBall() {
 function moneyCounter() {
   money = money - priceForBall
   console.log(money)
-  document.getElementById("moneyCount").innerHTML = "your money: "+money
+  document.getElementById("moneyCount").innerHTML = "your money: "+money.toFixed(1)
 }
 
 // Add collision event listener
@@ -112,8 +118,8 @@ Matter.Events.on(engine, "collisionStart", event => {
       const holeNumber = Math.round((Math.abs(distanceFromCenter)+32)/32);
       console.log("Hole number "+holeNumber)
       Matter.World.remove(world, ball)
-      money = money + parseFloat((holeNumber * 3.8).toFixed(2))
-      document.getElementById("moneyCount").innerHTML = "your money: "+money
+      money = money + (holeNumber * (holeNumber+2))
+      document.getElementById("moneyCount").innerHTML = "your money: "+money.toFixed(1)
 
     }
   });
@@ -122,7 +128,7 @@ Matter.Events.on(engine, "collisionStart", event => {
 
 // Button click event to spawn a new ball
 document.getElementById("spawnBtn").addEventListener("click", spawnBall)
-document.getElementById("moneyCount").innerHTML = "your money: "+money
+document.getElementById("moneyCount").innerHTML = "your money: "+money.toFixed(1)
 
 // Run the engine and renderer
 engine.world.gravity.y = 2
