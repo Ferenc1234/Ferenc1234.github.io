@@ -31,18 +31,18 @@ const ground = Bodies.rectangle(250, 500 - 25, 500, 50, {
 // Add ground to the world
 World.add(world, ground)
 
-// Create a function to create a pyramid of circles
+// Create a function to create a pyramid of dots (plinko board)
 function createPyramid(baseX, baseY, radius, rows) {
   let offsetX = -32 // Horizontal offset for each row
   let offsetY = radius * 7 // Vertical offset between rows
 
   for (let row = 1; row <= rows; row++) {
-    // For each row, create an increasing number of circles
+    // For each row, create an increasing number of dots
     for (let i = 0; i < row + 2; i++) {
       let x = baseX + offsetX + i * (radius * 8) // Horizontal positioning
       let y = baseY + offsetY * row - 95 // Vertical positioning
 
-      // Create the circle and add it to the world
+      // Create the dot and add it to the world
       const plinko = Bodies.circle(x, y, radius, {
         isStatic: true,
         render: {
@@ -52,7 +52,7 @@ function createPyramid(baseX, baseY, radius, rows) {
       })
       World.add(world, plinko)
     }
-    // Adjust the horizontal offset for the next row (center alignment)
+    // Adjust the horizontal offset for the next row
     offsetX -= 16
   }
   for (let i = 0; i < 12 + 2; i++) {
@@ -68,7 +68,7 @@ function createPyramid(baseX, baseY, radius, rows) {
   }
 }
 
-// Create a pyramid starting at a specific position with a radius of 4 and 5 rows
+// Create a pyramid starting at the middle with a radius of 4 and 12 rows
 createPyramid(250, 150, 4, 12)
 
 // Function to spawn a new ball

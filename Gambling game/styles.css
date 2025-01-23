@@ -4,12 +4,17 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* pěkně ve středu */
+  height: 100vh; /* center content */
   background: #47434b;
 }
 canvas {
   display: block;
   border-radius: 15px;
+}
+h1{
+  font-size: 100px;
+  text-align: center;
+  margin-bottom: 0;
 }
 .container {
   display: flex;
