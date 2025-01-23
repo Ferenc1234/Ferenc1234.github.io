@@ -127,6 +127,44 @@ Matter.Events.on(engine, "collisionStart", (event) => {
   })
 })
 
+
+function calculateReward(holeNumber, risk, ballPrice) {
+    // Odměny při nízkém riziku (% hodnoty)
+    const lowRiskRewards = {
+        1: 100, // Prostřední díra
+        2: 100,
+        3: 100,
+        4: 100,
+        5: 100,
+        6: 100,
+        7: 100, // Krajní díry
+    };
+
+    // Odměny při vysokém riziku (% hodnoty)
+    const highRiskRewards = {
+        1: 0,  // Prostřední díra
+        2: 10,
+        3: 20,
+        4: 100,
+        5: 500,
+        6: 1000,
+        7: 5000, // Krajní díry
+    };
+
+    // Normalizace rizika na rozsah 0–1
+    const normalizedRisk = Math.min(Math.max(risk, 0), 99) / 99;
+
+    // Lineární interpolace mezi nízkým a vysokým rizikem
+    const lowReward = lowRiskRewards[holeNumber];
+    const highReward = highRiskRewards[holeNumber];
+    const percentageReward = lowReward + normalizedRisk * (highReward - lowReward);
+
+    // Výpočet finální odměny (procenta přepočítaná na základě ceny kuličky)
+    const reward = (percentageReward / 100) * ballPrice;
+
+    return parseFloat(reward.toFixed(2)); // Zaokrouhlení na 2 desetinná místa
+}
+
 // Button click event to spawn a new ball
 document.getElementById("spawnBtn").addEventListener("click", spawnBall)
 document.getElementById("moneyCount").innerHTML =
