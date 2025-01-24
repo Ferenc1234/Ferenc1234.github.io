@@ -6,6 +6,7 @@ const engine = Engine.create()
 const world = engine.world
 let money = 1000
 const priceForBall = 10
+const RISK = 20
 
 // Create a renderer
 const render = Render.create({
@@ -118,8 +119,8 @@ Matter.Events.on(engine, "collisionStart", (event) => {
       console.log("Old balance: " + money + "$")
       console.log("Hole number " + holeNumber)
       Matter.World.remove(world, ball)
-      money = money + holeNumber * (holeNumber + 2)
-      console.log("Added " + holeNumber * (holeNumber + 2) + "$ to account")
+      money = money + calculateReward(holeNumber, RISK, priceForBall)
+      console.log("Added " + calculateReward(holeNumber, RISK, priceForBall) + "$ to account")
       document.getElementById("moneyCount").innerHTML =
         "Your Money: " + money.toFixed(1) + "$"
       console.log("New balance: " + money + "$")
@@ -165,10 +166,40 @@ function calculateReward(holeNumber, risk, ballPrice) {
     return parseFloat(reward.toFixed(2)); // Zaokrouhlení na 2 desetinná místa
 }
 
+function riskChange(){
+	document.getElementById("scoringText").innerHTML =
+  " " +
+  toString(calculateReward(7, RISK, priceForBall)).padStart(3, '0')
+	+ " " +
+  toString(calculateReward(6, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(5, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(4, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(3, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(2, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(1, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(2, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(3, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(4, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(5, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(6, RISK, priceForBall)).padStart(3, '0')
+  + " " +
+  toString(calculateReward(7, RISK, priceForBall)).padStart(3, '0')
+}
+
 // Button click event to spawn a new ball
 document.getElementById("spawnBtn").addEventListener("click", spawnBall)
-document.getElementById("moneyCount").innerHTML =
-  "Your Money: " + money.toFixed(1) + "$"
+document.getElementById("moneyCount").innerHTML = "Your Money: " + money.toFixed(1) + "$"
+riskChange()
 
 // Run the engine and renderer
 engine.world.gravity.y = 2
