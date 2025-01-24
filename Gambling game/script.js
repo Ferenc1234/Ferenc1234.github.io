@@ -6,7 +6,7 @@ const engine = Engine.create()
 const world = engine.world
 let money = 1000
 const priceForBall = 10
-const RISK = 10
+const RISK = 5
 
 // Create a renderer
 const render = Render.create({
@@ -147,12 +147,12 @@ function calculateReward(holeNumber, risk, ballPrice) {
     // Odměny při vysokém riziku (% hodnoty)
     const highRiskRewards = {
         1: 0,  // Prostřední díra
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 5000, // Krajní díry
+        2: 10,
+        3: 20,
+        4: 40,
+        5: 100,
+        6: 5000,
+        7: 50000, // Krajní díry
     };
 
     // Normalizace rizika na rozsah 0–1
