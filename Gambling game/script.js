@@ -6,7 +6,8 @@ const engine = Engine.create()
 const world = engine.world
 let money = 1000
 const priceForBall = 10
-const RISK = 5
+let risk = 5
+let ballsInGame = 0
 
 // Create a renderer
 const render = Render.create({
@@ -76,8 +77,9 @@ createPyramid(250, 150, 4, 12)
 function spawnBall() {
   if (money >= 0 + priceForBall) {
     moneyCounter()
-    const ball = Bodies.circle(250 + Math.random() * 12 - 6, 60, 12, {
-      restitution: 1,
+    const ball = Bodies.circle(250 + Math.random() * 12.0 - 6.0, 60, 12, {
+      restitution: 0.65, //DO NOT TOUCH
+      friction: 0.05, //DO NOT TOUCH
       render: {
         fillStyle: "#a7bf2e",
       },
@@ -89,6 +91,10 @@ function spawnBall() {
 
     // Add the ball to the world
     World.add(world, ball)
+    ballsInGame++
+    if (ballsInGame >= 1){
+    	lockSlider()
+    }
   } else {
     console.log("user ran out of money, hooray!")
   }
@@ -111,7 +117,6 @@ Matter.Events.on(engine, "collisionStart", (event) => {
       (bodyA.label === "Ball" && bodyB.label === "ground") ||
       (bodyA.label === "ground" && bodyB.label === "Ball")
     ) {
-      // Set the ball's color to red
       const ball = bodyA.label === "Ball" ? bodyA : bodyB
       const distanceFromCenter = ball.position.x - 250
       const holeNumber = Math.round((Math.abs(distanceFromCenter) + 32) / 32)
@@ -119,11 +124,15 @@ Matter.Events.on(engine, "collisionStart", (event) => {
       console.log("Old balance: " + money + "$")
       console.log("Hole number " + holeNumber)
       Matter.World.remove(world, ball)
-      money = money + calculateReward(holeNumber, RISK, priceForBall)
-      console.log("Added " + calculateReward(holeNumber, RISK, priceForBall) + "$ to account")
+      money = money + calculateReward(holeNumber, risk, priceForBall)
+      console.log("Added " + calculateReward(holeNumber, risk, priceForBall) + "$ to account")
       document.getElementById("moneyCount").innerHTML =
         "Your Money: " + money.toFixed(1) + "$"
       console.log("New balance: " + money + "$")
+      ballsInGame--
+      if (ballsInGame == 0){
+      	unlockSlider()
+      }
     }
   })
 })
@@ -142,7 +151,23 @@ function calculateReward(holeNumber, risk, ballPrice) {
         5: 100,
         6: 100,
         7: 100, // Krajní díry
-    };
+    };function lockSlider() {
+  const slider = document.getElementById('slider');
+  const status = document.getElementById('status');
+  
+  slider.disabled = true;  // Disable the slider
+  slider.classList.add('locked');  // Add a 'locked' class for styling
+  status.textContent = "Slider is locked and cannot be moved.";
+}
+
+function unlockSlider() {
+  const slider = document.getElementById('slider');
+  const status = document.getElementById('status');
+  
+  slider.disabled = false;  // Enable the slider again
+  slider.classList.remove('locked');  // Remove the 'locked' class
+  status.textContent = "Slider is active.";
+}
 
     // Odměny při vysokém riziku (% hodnoty)
     const highRiskRewards = {
@@ -150,8 +175,8 @@ function calculateReward(holeNumber, risk, ballPrice) {
         2: 10,
         3: 20,
         4: 40,
-        5: 100,
-        6: 5000,
+        5: 200,
+        6: 10000,
         7: 50000, // Krajní díry
     };
 
@@ -170,22 +195,54 @@ function calculateReward(holeNumber, risk, ballPrice) {
 }
 
 function riskChange() {
-  document.getElementById("scoring").innerHTML =
-      (calculateReward(7, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(6, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(5, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(4, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(3, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(2, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(1, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(2, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(3, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(4, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(5, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(6, RISK).toFixed(1)).padStart(3, '0') + "× " +
-      (calculateReward(7, RISK).toFixed(1)).padStart(3, '0') + "× "
+  document.getElementById("scoringText").innerHTML =
+      (calculateReward(7, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(6, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(5, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(4, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(3, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(2, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(1, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(2, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(3, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(4, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(5, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(6, risk).toFixed(1)).padStart(5, '\u00a0') + "× " +
+      (calculateReward(7, risk).toFixed(1)).padStart(5, '\u00a0') + "× "
 }
 
+
+// Function to be called when slider value changes
+function updateSliderValue() {
+		const slider = document.getElementById('slider');
+		const valueDisplay = document.getElementById('sliderValue');
+    const sliderValue = slider.value;  // Get the current value of the slider
+    valueDisplay.textContent = sliderValue;  // Update the displayed value 
+    risk = sliderValue
+    riskChange()
+}
+
+// Set the event listener for when the slider changes
+slider.addEventListener('input', updateSliderValue);
+
+
+function lockSlider() {
+  const slider = document.getElementById('slider');
+  const status = document.getElementById('status');
+  
+  slider.disabled = true;  // Disable the slider
+  slider.classList.add('locked');  // Add a 'locked' class for styling
+  status.textContent = "You cannot change risk - ball is in game";
+}
+
+function unlockSlider() {
+  const slider = document.getElementById('slider');
+  const status = document.getElementById('status');
+  
+  slider.disabled = false;  // Enable the slider again
+  slider.classList.remove('locked');  // Remove the 'locked' class
+  status.textContent = "";
+}
 
 // Button click event to spawn a new ball
 document.getElementById("spawnBtn").addEventListener("click", spawnBall)

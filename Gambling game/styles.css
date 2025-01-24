@@ -51,15 +51,16 @@ button {
 }
 .scoringText {
   padding: 1px 1px;
-  font-size: 20px;
+  font-size: 10px;
   text-align: center;
-  word-spacing: 0.45rem;
+  word-spacing: 0.1rem;
   background-color: #f95a37;
   color: white;
   border: none;
-  border-radius: 5px;
-  transform: translate(477px, 130px);
-  width: 450px;
+  border-radius: 20px;
+  transform: translate(485px, 40px);
+  width: 470px;
+  font-family: sono
 }
 
 button:hover {

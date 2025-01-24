@@ -9,6 +9,9 @@
       href="https://fonts.googleapis.com/css2?family=Dongle&display=swap"
       rel="stylesheet"
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sono:wght@200..800&display=swap" rel="stylesheet">
     <link
       href="styles.css"
       rel="stylesheet"
@@ -21,9 +24,17 @@
       <div class="leftPanel">
         <button id="spawnBtn">Spawn Ball (-10$)</button>
         <p id="moneyCount" class="money"></p>
+        <p class:"sliderBox">
+        <!-- Slider input -->
+        <input type="range" id="slider" min="0" max="99" value="5">
+    <!-- Display the current value -->
+        <p>Risk: <span id="sliderValue">5</span>%</p>
+        <p id="status"></p>
+        </p>
         <p class="scoringText" id="scoringText">
           63$ 48$ 35$ 24$ 15$ 08$ 03$ 08$ 15$ 24$ 35$ 48$ 63$
         </p>
+        
       </div>
     </div>
     <script src="script.js"></script>
