@@ -6,7 +6,7 @@ const engine = Engine.create()
 const world = engine.world
 let money = 1000
 const priceForBall = 10
-const RISK = 20
+const RISK = 10
 
 // Create a renderer
 const render = Render.create({
@@ -130,7 +130,10 @@ Matter.Events.on(engine, "collisionStart", (event) => {
 
 
 function calculateReward(holeNumber, risk, ballPrice) {
-    // Odměny při nízkém riziku (% hodnoty)
+    if (ballPrice === undefined){
+    	ballPrice = 1
+    }
+  // Odměny při nízkém riziku (% hodnoty)
     const lowRiskRewards = {
         1: 100, // Prostřední díra
         2: 100,
@@ -144,11 +147,11 @@ function calculateReward(holeNumber, risk, ballPrice) {
     // Odměny při vysokém riziku (% hodnoty)
     const highRiskRewards = {
         1: 0,  // Prostřední díra
-        2: 10,
-        3: 20,
-        4: 100,
-        5: 500,
-        6: 1000,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
         7: 5000, // Krajní díry
     };
 
@@ -166,35 +169,23 @@ function calculateReward(holeNumber, risk, ballPrice) {
     return parseFloat(reward.toFixed(2)); // Zaokrouhlení na 2 desetinná místa
 }
 
-function riskChange(){
-	document.getElementById("scoringText").innerHTML =
-  " " +
-  toString(calculateReward(7, RISK, priceForBall)).padStart(3, '0')
-	+ " " +
-  toString(calculateReward(6, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(5, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(4, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(3, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(2, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(1, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(2, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(3, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(4, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(5, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(6, RISK, priceForBall)).padStart(3, '0')
-  + " " +
-  toString(calculateReward(7, RISK, priceForBall)).padStart(3, '0')
+function riskChange() {
+  document.getElementById("scoring").innerHTML =
+      (calculateReward(7, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(6, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(5, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(4, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(3, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(2, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(1, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(2, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(3, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(4, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(5, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(6, RISK).toFixed(1)).padStart(3, '0') + "× " +
+      (calculateReward(7, RISK).toFixed(1)).padStart(3, '0') + "× "
 }
+
 
 // Button click event to spawn a new ball
 document.getElementById("spawnBtn").addEventListener("click", spawnBall)
