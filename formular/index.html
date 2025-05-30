@@ -33,31 +33,29 @@
     submitBtn.type = 'submit';
     submitBtn.textContent = 'Send';
     form.appendChild(submitBtn);
-
     container.appendChild(form);
 
     form.addEventListener('submit', async e => {
-  e.preventDefault();
-  const data = {};
-  new FormData(form).forEach((value, key) => data[key] = value);
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
 
-  const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
-  });
+      const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
 
-  const result = await res.json();
+      const result = await res.json();
 
-  if (result.success) {
-    alert(result.message);
-    form.reset();
-  } else {
-    alert(result.message + ". See console for details.");
-    console.error("Email sending error:", result.error);
-  }
-});
-
+      if (result.success) {
+        alert(result.message);
+        form.reset();
+      } else {
+        alert(result.message + ". See console for details.");
+        console.error("Email sending error:", result.error);
+      }
+    });
   }
 
   loadForm();
