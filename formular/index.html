@@ -25,20 +25,21 @@
       if (field.required) input.required = true;
 
       label.appendChild(input);
-      container.appendChild(label);
-      container.appendChild(document.createElement('br'));
+      form.appendChild(label); // ✅ Append to form, not container
+      form.appendChild(document.createElement('br'));
     });
 
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
     submitBtn.textContent = 'Send';
     form.appendChild(submitBtn);
+
     container.appendChild(form);
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
+      const data = {};
+      new FormData(form).forEach((value, key) => data[key] = value);
 
       const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
         method: 'POST',
