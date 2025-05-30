@@ -37,6 +37,7 @@ body {
     font-size: 1rem;
     margin-top: 0.25rem;
     transition: border 0.2s ease;
+    resize: vertical;
   }
 
   input:focus, textarea:focus {
