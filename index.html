@@ -3,21 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Testíček</title>
+    <title>František Rubáček</title>
     <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 <body>
-    <h1>Ůkoli do školi</h1>
+    <h1>František Rubáček</h1>
     <p class="popis">
-        Ůkoli do PVY
+        Moje projekty a úkoly do školy
     <p>
         <br>
     <button class="button-85" onclick="window.location.href='/ukolyDoSkoly/index.html'">Úkoly do školy</button><br><br>
+
+    <button class="button-85" onclick="window.location.href='/formular/index.html'">Formulář 3D tisk</button><br><br>
    
     <button class="button-85" onclick="window.location.href='https://github.com/Ferenc1234/Ferenc1234.github.io'"><b>Zobrazit kód stránky</b></button><br><br>
     </p>
 <footer>
-    <p>&copy; 2024 František Rubáček :D</p>
+    <p>&copy; <span id="year"></span> František Rubáček :D</p>
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
 </footer>
 </body>
 </html>

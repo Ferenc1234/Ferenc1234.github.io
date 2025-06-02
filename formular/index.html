@@ -15,9 +15,20 @@
     const form = document.createElement('form');
     form.id = 'dynamic-form';
 
+    // Create an element for showing errors
+    const errorsDiv = document.createElement('div');
+    errorsDiv.style.color = 'red';
+    errorsDiv.style.marginTop = '1rem';
+
+    // Create an element for success message
+    const successDiv = document.createElement('div');
+    successDiv.style.color = 'lightgreen';
+    successDiv.style.marginTop = '1rem';
+
     fields.forEach(field => {
       const label = document.createElement('label');
-      label.textContent = field.label + ': ';
+
+      label.innerHTML = field.label + (field.required ? ' <span style="color:red">*</span>' : '') + ':';
 
       let input;
       if (field.type === 'textarea') {
@@ -30,8 +41,9 @@
       input.name = field.name;
       if (field.required) input.required = true;
 
+      label.appendChild(document.createElement('br'));
       label.appendChild(input);
-      form.appendChild(label); // ✅ Append to form, not container
+      form.appendChild(label);
       form.appendChild(document.createElement('br'));
     });
 
@@ -41,29 +53,59 @@
     form.appendChild(submitBtn);
 
     container.appendChild(form);
+    container.appendChild(errorsDiv);
+    container.appendChild(successDiv);
 
     form.addEventListener('submit', async e => {
-  e.preventDefault();
+      e.preventDefault();
+      errorsDiv.textContent = '';
+      successDiv.textContent = '';
 
-  const formData = new FormData(form);
+      const formData = new FormData(form);
 
-  const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
-    method: 'POST',
-    body: formData // ✅ Use FormData directly
-    // ❌ Do NOT set Content-Type manually — browser will handle it
-  });
+      // Client-side validation
+      let errors = [];
 
-  const result = await res.json();
+      // Check required fields manually to customize messages
+      fields.forEach(field => {
+        if (field.required) {
+          const val = formData.get(field.name);
+          if (!val || (field.type === 'file' && val.size === 0)) {
+            errors.push(`${field.label} is required.`);
+          } else if (field.type === 'email' && val) {
+            // Simple email format check
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(val)) {
+              errors.push('Please enter a valid email address.');
+            }
+          }
+        }
+      });
 
-  if (result.success) {
-    alert(result.message);
-    form.reset();
-  } else {
-    alert(result.message + ". See console for details.");
-    console.error("Email sending error:", result.error);
-  }
-});
+      if (errors.length > 0) {
+        errorsDiv.innerHTML = errors.map(e => `<div>${e}</div>`).join('');
+        return;
+      }
 
+      try {
+        const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await res.json();
+
+        if (result.success) {
+          successDiv.textContent = result.message;
+          form.reset();
+        } else {
+          errorsDiv.textContent = result.message || 'Unknown error.';
+          console.error('Email sending error:', result.error);
+        }
+      } catch (err) {
+        errorsDiv.textContent = 'Network or server error: ' + err.message;
+      }
+    });
   }
 
   loadForm();
