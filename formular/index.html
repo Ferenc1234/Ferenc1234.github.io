@@ -15,12 +15,10 @@
     const form = document.createElement('form');
     form.id = 'dynamic-form';
 
-    // Create an element for showing errors
     const errorsDiv = document.createElement('div');
     errorsDiv.style.color = 'red';
     errorsDiv.style.marginTop = '1rem';
 
-    // Create an element for success message
     const successDiv = document.createElement('div');
     successDiv.style.color = 'lightgreen';
     successDiv.style.marginTop = '1rem';
@@ -50,11 +48,27 @@
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
     submitBtn.textContent = 'Send';
+    submitBtn.style.position = 'relative'; // for spinner positioning
     form.appendChild(submitBtn);
 
     container.appendChild(form);
     container.appendChild(errorsDiv);
     container.appendChild(successDiv);
+
+    // Create spinner element (hidden by default)
+    const spinner = document.createElement('span');
+    spinner.style.border = '2px solid #f3f3f3'; // Light grey
+    spinner.style.borderTop = '2px solid #7f5af0'; // Purple
+    spinner.style.borderRadius = '50%';
+    spinner.style.width = '14px';
+    spinner.style.height = '14px';
+    spinner.style.animation = 'spin 1s linear infinite';
+    spinner.style.position = 'absolute';
+    spinner.style.top = '50%';
+    spinner.style.left = '10px';
+    spinner.style.transform = 'translateY(-50%)';
+    spinner.style.display = 'none';
+    submitBtn.prepend(spinner);
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
@@ -63,21 +77,29 @@
 
       const formData = new FormData(form);
 
-      // Client-side validation
       let errors = [];
 
-      // Check required fields manually to customize messages
+      // Max upload size 10MB
+      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
       fields.forEach(field => {
         if (field.required) {
           const val = formData.get(field.name);
           if (!val || (field.type === 'file' && val.size === 0)) {
             errors.push(`${field.label} is required.`);
           } else if (field.type === 'email' && val) {
-            // Simple email format check
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(val)) {
               errors.push('Please enter a valid email address.');
             }
+          }
+        }
+
+        // Check file size for file fields
+        if (field.type === 'file') {
+          const file = formData.get(field.name);
+          if (file && file.size > MAX_FILE_SIZE) {
+            errors.push(`File "${file.name}" is too large. Max size is 10MB.`);
           }
         }
       });
@@ -87,10 +109,14 @@
         return;
       }
 
+      // Show spinner & disable button
+      spinner.style.display = 'inline-block';
+      submitBtn.disabled = true;
+
       try {
         const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
           method: 'POST',
-          body: formData
+          body: formData,
         });
 
         const result = await res.json();
@@ -104,9 +130,22 @@
         }
       } catch (err) {
         errorsDiv.textContent = 'Network or server error: ' + err.message;
+      } finally {
+        spinner.style.display = 'none';
+        submitBtn.disabled = false;
       }
     });
   }
+
+  // Spinner CSS animation
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  `;
+  document.head.appendChild(style);
 
   loadForm();
 </script>
