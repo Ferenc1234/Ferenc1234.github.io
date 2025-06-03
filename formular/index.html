@@ -116,7 +116,7 @@
       submitBtn.disabled = true;
 
       try {
-        const token = await grecaptcha.execute('YOUR_SITE_KEY', { action: 'submit' });
+        const token = await grecaptcha.execute('6LeNLFQrAAAAAE1PT3plAyvknxmEemxdQv0KrPFS', { action: 'submit' });
         formData.append('captcha', token);
 
         const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
