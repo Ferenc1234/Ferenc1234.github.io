@@ -1,34 +1,50 @@
 body {
+  background: linear-gradient(135deg, #1e1e2f, #121218);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #eee;
   margin: 0;
   padding: 2rem;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  background-color: #f5f7fa;
-  color: #333;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
 }
 
 #form-container {
-  max-width: 600px;
-  margin: auto;
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 2rem;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 0.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-input, textarea {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 0.3rem;
-  font-size: 1rem;
+form {
   width: 100%;
-  box-sizing: border-box;
 }
 
 label {
-  font-weight: bold;
+  display: block;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
 }
 
-.error-message {
+input,
+textarea,
+button[type="submit"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.6rem 0.8rem;
+  background-color: #2c2c3b;
+  border: 1px solid #444;
+  border-radius: 0.5rem;
+  color: #eee;
+  font-size: 1rem;
   margin-top: 0.25rem;
   transition: border 0.2s ease;
 }
@@ -53,8 +69,6 @@ button[type="submit"] {
   transition: background 0.3s ease;
 }
 
-
 button[type="submit"]:hover {
   background: linear-gradient(135deg, #9a77ff, #7152d0);
-
 }
