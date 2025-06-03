@@ -32,7 +32,7 @@ label {
   margin-top: 0.25rem;
 }
 
-button[type="submit"]:disabled {
-  background: #ccc;
-  cursor: not-allowed;
+button[type="submit"]:hover {
+  background: linear-gradient(135deg, #9a77ff, #7152d0);
+
 }
