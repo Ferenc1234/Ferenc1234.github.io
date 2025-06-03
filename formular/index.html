@@ -6,6 +6,7 @@
   <title>Dynamic Form</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://www.google.com/recaptcha/api.js?render=6LeNLFQrAAAAAE1PT3plAyvknxmEemxdQv0KrPFS"></script>
+
   <meta http-equiv="Content-Security-Policy" content="
     default-src 'self';
     script-src 'self' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com;
@@ -14,22 +15,6 @@
     style-src 'self' 'unsafe-inline';
   ">
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <style>
-    body {
-      background: linear-gradient(135deg, #1e1e2f, #121218);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      color: #eee;
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-    }
-    textarea {
-      resize: vertical !important;
-    }
-  </style>
 </head>
 
 <body>
@@ -43,20 +28,20 @@
       const container = document.getElementById('form-container');
       const form = document.createElement('form');
       form.id = 'dynamic-form';
-      form.style.display = 'flex';
-      form.style.flexDirection = 'column';
-      form.style.gap = '1rem';
 
       const errorsDiv = document.createElement('div');
       errorsDiv.style.color = 'red';
+      errorsDiv.style.marginTop = '1rem';
 
       const successDiv = document.createElement('div');
       successDiv.style.color = 'lightgreen';
+      successDiv.style.marginTop = '1rem';
 
       const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
       fields.forEach(field => {
         const wrapper = document.createElement('div');
+        wrapper.style.marginBottom = '1rem';
 
         const label = document.createElement('label');
         label.innerHTML = field.label + (field.required ? ' <span style="color:red">*</span>' : '') + ':';
@@ -64,7 +49,6 @@
         let input;
         if (field.type === 'textarea') {
           input = document.createElement('textarea');
-          input.style.resize = 'vertical';
         } else {
           input = document.createElement('input');
           input.type = field.type;
@@ -73,9 +57,7 @@
         input.name = field.name;
         if (field.required) input.required = true;
 
-        input.style.width = '100%';
-        input.style.boxSizing = 'border-box';
-
+        // Error message span
         const errorMsg = document.createElement('div');
         errorMsg.style.color = 'red';
         errorMsg.style.fontSize = '0.9em';
@@ -118,24 +100,27 @@
 
       const submitBtn = document.createElement('button');
       submitBtn.type = 'submit';
-      submitBtn.textContent = 'Send';
-      submitBtn.style.width = '100%';
       submitBtn.style.position = 'relative';
-      submitBtn.style.padding = '0.8rem';
-      submitBtn.style.fontSize = '1rem';
-      submitBtn.style.borderRadius = '0.5rem';
-      submitBtn.style.background = 'linear-gradient(135deg, #7f5af0, #5c3bba)';
-      submitBtn.style.color = 'white';
-      submitBtn.style.border = 'none';
-      submitBtn.style.cursor = 'pointer';
-      submitBtn.style.transition = 'background 0.3s ease';
+      submitBtn.style.minWidth = '120px';
 
-      submitBtn.addEventListener('mouseover', () => {
-        submitBtn.style.background = 'linear-gradient(135deg, #9a77ff, #7152d0)';
-      });
-      submitBtn.addEventListener('mouseout', () => {
-        submitBtn.style.background = 'linear-gradient(135deg, #7f5af0, #5c3bba)';
-      });
+      const textSpan = document.createElement('span');
+      textSpan.textContent = 'Send';
+      textSpan.style.visibility = 'visible';
+      submitBtn.appendChild(textSpan);
+
+      const spinner = document.createElement('span');
+      spinner.style.border = '2px solid #f3f3f3';
+      spinner.style.borderTop = '2px solid #7f5af0';
+      spinner.style.borderRadius = '50%';
+      spinner.style.width = '16px';
+      spinner.style.height = '16px';
+      spinner.style.animation = 'spin 1s linear infinite';
+      spinner.style.position = 'absolute';
+      spinner.style.top = '50%';
+      spinner.style.left = '50%';
+      spinner.style.transform = 'translate(-50%, -50%)';
+      spinner.style.display = 'none';
+      submitBtn.appendChild(spinner);
 
       form.appendChild(submitBtn);
       container.appendChild(form);
@@ -147,6 +132,7 @@
         errorsDiv.textContent = '';
         successDiv.textContent = '';
 
+        // Trigger validation on all fields
         let isValid = true;
         fields.forEach(field => {
           const input = form.elements[field.name];
@@ -161,6 +147,10 @@
         }
 
         const formData = new FormData(form);
+
+        spinner.style.display = 'inline-block';
+        textSpan.style.visibility = 'hidden';
+        submitBtn.disabled = true;
 
         try {
           const token = await grecaptcha.execute('6LeNLFQrAAAAAE1PT3plAyvknxmEemxdQv0KrPFS', { action: 'submit' });
@@ -183,9 +173,22 @@
           }
         } catch (err) {
           errorsDiv.textContent = 'Chyba sítě nebo serveru: ' + err.message;
+        } finally {
+          spinner.style.display = 'none';
+          textSpan.style.visibility = 'visible';
+          submitBtn.disabled = false;
         }
       });
     }
+
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
 
     loadForm();
   </script>
