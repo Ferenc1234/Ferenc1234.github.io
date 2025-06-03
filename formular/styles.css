@@ -67,8 +67,15 @@ button[type="submit"] {
   margin-top: 1rem;
   cursor: pointer;
   transition: background 0.3s ease;
+  position: relative;
+  min-width: 120px;
 }
 
 button[type="submit"]:hover {
   background: linear-gradient(135deg, #9a77ff, #7152d0);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
