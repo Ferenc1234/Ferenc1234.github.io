@@ -14,6 +14,22 @@
     style-src 'self' 'unsafe-inline';
   ">
   <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <style>
+    body {
+      background: linear-gradient(135deg, #1e1e2f, #121218);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #eee;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+    textarea {
+      resize: vertical !important;
+    }
+  </style>
 </head>
 
 <body>
@@ -48,6 +64,7 @@
         let input;
         if (field.type === 'textarea') {
           input = document.createElement('textarea');
+          input.style.resize = 'vertical';
         } else {
           input = document.createElement('input');
           input.type = field.type;
