@@ -1,6 +1,8 @@
 <head>
   <link rel="stylesheet" href="styles.css">
+  <script src="https://www.google.com/recaptcha/api.js?render=6LeNLFQrAAAAAE1PT3plAyvknxmEemxdQv0KrPFS"></script>
 </head>
+
 <body>
   <div id="form-container"></div>
 </body>
@@ -114,6 +116,9 @@
       submitBtn.disabled = true;
 
       try {
+        const token = await grecaptcha.execute('YOUR_SITE_KEY', { action: 'submit' });
+        formData.append('captcha', token);
+
         const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
           method: 'POST',
           body: formData,
@@ -130,7 +135,8 @@
         }
       } catch (err) {
         errorsDiv.textContent = 'Network or server error: ' + err.message;
-      } finally {
+      }
+      finally {
         spinner.style.display = 'none';
         submitBtn.disabled = false;
       }
