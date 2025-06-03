@@ -68,11 +68,11 @@
 
           if (field.required) {
             if (!val || (field.type === 'file' && input.files.length === 0)) {
-              error = `${field.label} is required.`;
+              error = `Pole ${field.label} je povinné.`;
             } else if (field.type === 'email') {
               const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
               if (!emailRegex.test(val)) {
-                error = 'Please enter a valid email address.';
+                error = 'Zadejte prosím platnou e-mailovou adresu.';
               }
             }
           }
@@ -80,7 +80,7 @@
           if (field.type === 'file') {
             const file = input.files[0];
             if (file && file.size > MAX_FILE_SIZE) {
-              error = `File "${file.name}" is too large. Max size is 10MB.`;
+              error = `Soubor "${file.name}" je příliš velký. Maximální velikost je 10MB.`;
             }
           }
 
@@ -141,7 +141,7 @@
         });
 
         if (!isValid) {
-          errorsDiv.textContent = 'Please fix the errors above before submitting.';
+          errorsDiv.textContent = 'Prosím opravte chyby výše před odesláním.';
           return;
         }
 
@@ -167,11 +167,11 @@
             form.reset();
             form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
           } else {
-            errorsDiv.textContent = result.message || 'Unknown error.';
-            console.error('Email sending error:', result.error);
+            errorsDiv.textContent = result.message || 'Neznámá chyba.';
+            console.error('Chyba při odesílání e-mailu:', result.error);
           }
         } catch (err) {
-          errorsDiv.textContent = 'Network or server error: ' + err.message;
+          errorsDiv.textContent = 'Chyba sítě nebo serveru: ' + err.message;
         } finally {
           spinner.style.display = 'none';
           textSpan.style.visibility = 'visible';
