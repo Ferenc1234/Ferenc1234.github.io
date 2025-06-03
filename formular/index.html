@@ -1,12 +1,11 @@
 <head>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
   <script src="https://www.google.com/recaptcha/api.js?render=6LeNLFQrAAAAAE1PT3plAyvknxmEemxdQv0KrPFS"></script>
 </head>
 
 <body>
   <div id="form-container"></div>
 </body>
-
 
 <script>
   async function loadForm() {
@@ -49,13 +48,11 @@
 
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
-    submitBtn.textContent = 'Send';
     submitBtn.style.position = 'relative'; // for spinner positioning
-    form.appendChild(submitBtn);
 
-    container.appendChild(form);
-    container.appendChild(errorsDiv);
-    container.appendChild(successDiv);
+    // Wrap the button text in a span for toggling visibility
+    const textSpan = document.createElement('span');
+    textSpan.textContent = 'Send';
 
     // Create spinner element (hidden by default)
     const spinner = document.createElement('span');
@@ -67,10 +64,18 @@
     spinner.style.animation = 'spin 1s linear infinite';
     spinner.style.position = 'absolute';
     spinner.style.top = '50%';
-    spinner.style.left = '10px';
-    spinner.style.transform = 'translateY(-50%)';
+    spinner.style.left = '50%';
+    spinner.style.transform = 'translate(-50%, -50%)';
     spinner.style.display = 'none';
-    submitBtn.prepend(spinner);
+
+    submitBtn.appendChild(textSpan);
+    submitBtn.appendChild(spinner);
+
+    form.appendChild(submitBtn);
+
+    container.appendChild(form);
+    container.appendChild(errorsDiv);
+    container.appendChild(successDiv);
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
@@ -111,8 +116,9 @@
         return;
       }
 
-      // Show spinner & disable button
+      // Show spinner & disable button, hide text
       spinner.style.display = 'inline-block';
+      textSpan.style.display = 'none';
       submitBtn.disabled = true;
 
       try {
@@ -135,9 +141,9 @@
         }
       } catch (err) {
         errorsDiv.textContent = 'Network or server error: ' + err.message;
-      }
-      finally {
+      } finally {
         spinner.style.display = 'none';
+        textSpan.style.display = 'inline';
         submitBtn.disabled = false;
       }
     });
