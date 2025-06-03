@@ -6,18 +6,13 @@
   <link rel="stylesheet" href="styles.css" />
   <script src="https://www.google.com/recaptcha/api.js?render=6LeNLFQrAAAAAE1PT3plAyvknxmEemxdQv0KrPFS"></script>
 
-  <!-- Content Security Policy via meta tag (less ideal than HTTP header) -->
   <meta http-equiv="Content-Security-Policy" content="
-  default-src 'self';
-  script-src 'self' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com;
-  frame-src https://www.google.com/recaptcha/;
-  connect-src 'self' https://hidden-term-c0fc.frubacek.workers.dev;
-  style-src 'self' 'unsafe-inline';
-">
-
-
-
-  <!-- Referrer Policy -->
+    default-src 'self';
+    script-src 'self' 'unsafe-inline' https://www.google.com/recaptcha/ https://www.gstatic.com;
+    frame-src https://www.google.com/recaptcha/;
+    connect-src 'self' https://hidden-term-c0fc.frubacek.workers.dev;
+    style-src 'self' 'unsafe-inline';
+  ">
   <meta name="referrer" content="strict-origin-when-cross-origin" />
 </head>
 
@@ -41,7 +36,12 @@
       successDiv.style.color = 'lightgreen';
       successDiv.style.marginTop = '1rem';
 
+      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
       fields.forEach(field => {
+        const wrapper = document.createElement('div');
+        wrapper.style.marginBottom = '1rem';
+
         const label = document.createElement('label');
         label.innerHTML = field.label + (field.required ? ' <span style="color:red">*</span>' : '') + ':';
 
@@ -56,24 +56,57 @@
         input.name = field.name;
         if (field.required) input.required = true;
 
+        // Error message span
+        const errorMsg = document.createElement('div');
+        errorMsg.style.color = 'red';
+        errorMsg.style.fontSize = '0.9em';
+        errorMsg.className = 'error-message';
+
+        const validateField = () => {
+          const val = input.value;
+          let error = '';
+
+          if (field.required) {
+            if (!val || (field.type === 'file' && input.files.length === 0)) {
+              error = `${field.label} is required.`;
+            } else if (field.type === 'email') {
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (!emailRegex.test(val)) {
+                error = 'Please enter a valid email address.';
+              }
+            }
+          }
+
+          if (field.type === 'file') {
+            const file = input.files[0];
+            if (file && file.size > MAX_FILE_SIZE) {
+              error = `File "${file.name}" is too large. Max size is 10MB.`;
+            }
+          }
+
+          errorMsg.textContent = error;
+          return error === '';
+        };
+
+        input.addEventListener(field.type === 'file' ? 'change' : 'input', validateField);
+
         label.appendChild(document.createElement('br'));
-        label.appendChild(input);
-        form.appendChild(label);
-        form.appendChild(document.createElement('br'));
+        wrapper.appendChild(label);
+        wrapper.appendChild(input);
+        wrapper.appendChild(errorMsg);
+        form.appendChild(wrapper);
       });
 
       const submitBtn = document.createElement('button');
       submitBtn.type = 'submit';
       submitBtn.style.position = 'relative';
-      submitBtn.style.minWidth = '120px'; // Prevent shrinking
+      submitBtn.style.minWidth = '120px';
 
-      // Text inside button
       const textSpan = document.createElement('span');
       textSpan.textContent = 'Send';
       textSpan.style.visibility = 'visible';
       submitBtn.appendChild(textSpan);
 
-      // Spinner
       const spinner = document.createElement('span');
       spinner.style.border = '2px solid #f3f3f3';
       spinner.style.borderTop = '2px solid #7f5af0';
@@ -98,38 +131,22 @@
         errorsDiv.textContent = '';
         successDiv.textContent = '';
 
-        const formData = new FormData(form);
-        const MAX_FILE_SIZE = 10 * 1024 * 1024;
-        let errors = [];
-
+        // Trigger validation on all fields
+        let isValid = true;
         fields.forEach(field => {
-          const val = formData.get(field.name);
-
-          if (field.required) {
-            if (!val || (field.type === 'file' && val.size === 0)) {
-              errors.push(`${field.label} is required.`);
-            } else if (field.type === 'email') {
-              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-              if (!emailRegex.test(val)) {
-                errors.push('Please enter a valid email address.');
-              }
-            }
-          }
-
-          if (field.type === 'file') {
-            const file = formData.get(field.name);
-            if (file && file.size > MAX_FILE_SIZE) {
-              errors.push(`File "${file.name}" is too large. Max size is 10MB.`);
-            }
-          }
+          const input = form.elements[field.name];
+          const errorMsg = input.closest('div').querySelector('.error-message');
+          const fieldValid = errorMsg.textContent === '';
+          if (!fieldValid) isValid = false;
         });
 
-        if (errors.length > 0) {
-          errorsDiv.innerHTML = errors.map(e => `<div>${e}</div>`).join('');
+        if (!isValid) {
+          errorsDiv.textContent = 'Please fix the errors above before submitting.';
           return;
         }
 
-        // Show spinner, disable button, hide text
+        const formData = new FormData(form);
+
         spinner.style.display = 'inline-block';
         textSpan.style.visibility = 'hidden';
         submitBtn.disabled = true;
@@ -148,6 +165,7 @@
           if (result.success) {
             successDiv.textContent = result.message;
             form.reset();
+            form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
           } else {
             errorsDiv.textContent = result.message || 'Unknown error.';
             console.error('Email sending error:', result.error);
@@ -162,7 +180,6 @@
       });
     }
 
-    // Add spinner animation CSS
     const style = document.createElement('style');
     style.textContent = `
       @keyframes spin {
