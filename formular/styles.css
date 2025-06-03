@@ -69,7 +69,6 @@ button[type="submit"] {
   transition: background 0.3s ease;
 }
 
-
 button[type="submit"]:hover {
   background: linear-gradient(135deg, #9a77ff, #7152d0);
 }
