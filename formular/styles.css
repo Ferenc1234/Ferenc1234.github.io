@@ -1,7 +1,7 @@
 body {
-  background: linear-gradient(135deg, #1e1e2f, #121218);
+  background: linear-gradient(135deg, #1A1A1D, #2c2c31);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: #eee;
+  color: #1A1A1D;
   margin: 0;
   padding: 2rem;
   display: flex;
@@ -51,6 +51,7 @@ button[type="submit"] {
 
 textarea {
   resize: vertical;
+  min-height: 100px;
 }
 
 input:focus,
