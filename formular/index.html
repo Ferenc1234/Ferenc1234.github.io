@@ -1,163 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8" />
+  <title>Dynamic Form</title>
   <link rel="stylesheet" href="styles.css" />
   <script src="https://www.google.com/recaptcha/api.js?render=6LeNLFQrAAAAAE1PT3plAyvknxmEemxdQv0KrPFS"></script>
 </head>
 
 <body>
   <div id="form-container"></div>
-</body>
 
-<script>
-  async function loadForm() {
-    const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/');
-    const fields = await res.json();
+  <script>
+    async function loadForm() {
+      const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/');
+      const fields = await res.json();
 
-    const container = document.getElementById('form-container');
-    const form = document.createElement('form');
-    form.id = 'dynamic-form';
+      const container = document.getElementById('form-container');
+      const form = document.createElement('form');
+      form.id = 'dynamic-form';
 
-    const errorsDiv = document.createElement('div');
-    errorsDiv.style.color = 'red';
-    errorsDiv.style.marginTop = '1rem';
+      const errorsDiv = document.createElement('div');
+      errorsDiv.style.color = 'red';
+      errorsDiv.style.marginTop = '1rem';
 
-    const successDiv = document.createElement('div');
-    successDiv.style.color = 'lightgreen';
-    successDiv.style.marginTop = '1rem';
-
-    fields.forEach(field => {
-      const label = document.createElement('label');
-
-      label.innerHTML = field.label + (field.required ? ' <span style="color:red">*</span>' : '') + ':';
-
-      let input;
-      if (field.type === 'textarea') {
-        input = document.createElement('textarea');
-      } else {
-        input = document.createElement('input');
-        input.type = field.type;
-      }
-
-      input.name = field.name;
-      if (field.required) input.required = true;
-
-      label.appendChild(document.createElement('br'));
-      label.appendChild(input);
-      form.appendChild(label);
-      form.appendChild(document.createElement('br'));
-    });
-
-    const submitBtn = document.createElement('button');
-    submitBtn.type = 'submit';
-    submitBtn.style.position = 'relative'; // for spinner positioning
-
-    // Wrap the button text in a span for toggling visibility
-    const textSpan = document.createElement('span');
-    textSpan.textContent = 'Send';
-
-    // Create spinner element (hidden by default)
-    const spinner = document.createElement('span');
-    spinner.style.border = '2px solid #f3f3f3'; // Light grey
-    spinner.style.borderTop = '2px solid #7f5af0'; // Purple
-    spinner.style.borderRadius = '50%';
-    spinner.style.width = '14px';
-    spinner.style.height = '14px';
-    spinner.style.animation = 'spin 1s linear infinite';
-    spinner.style.position = 'absolute';
-    spinner.style.top = '50%';
-    spinner.style.left = '50%';
-    spinner.style.transform = 'translate(-50%, -50%)';
-    spinner.style.display = 'none';
-
-    submitBtn.appendChild(textSpan);
-    submitBtn.appendChild(spinner);
-
-    form.appendChild(submitBtn);
-
-    container.appendChild(form);
-    container.appendChild(errorsDiv);
-    container.appendChild(successDiv);
-
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      errorsDiv.textContent = '';
-      successDiv.textContent = '';
-
-      const formData = new FormData(form);
-
-      let errors = [];
-
-      // Max upload size 10MB
-      const MAX_FILE_SIZE = 10 * 1024 * 1024;
+      const successDiv = document.createElement('div');
+      successDiv.style.color = 'lightgreen';
+      successDiv.style.marginTop = '1rem';
 
       fields.forEach(field => {
-        if (field.required) {
-          const val = formData.get(field.name);
-          if (!val || (field.type === 'file' && val.size === 0)) {
-            errors.push(`${field.label} is required.`);
-          } else if (field.type === 'email' && val) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(val)) {
-              errors.push('Please enter a valid email address.');
-            }
-          }
+        const label = document.createElement('label');
+        label.innerHTML = field.label + (field.required ? ' <span style="color:red">*</span>' : '') + ':';
+
+        let input;
+        if (field.type === 'textarea') {
+          input = document.createElement('textarea');
+        } else {
+          input = document.createElement('input');
+          input.type = field.type;
         }
 
-        // Check file size for file fields
-        if (field.type === 'file') {
-          const file = formData.get(field.name);
-          if (file && file.size > MAX_FILE_SIZE) {
-            errors.push(`File "${file.name}" is too large. Max size is 10MB.`);
-          }
-        }
+        input.name = field.name;
+        if (field.required) input.required = true;
+
+        label.appendChild(document.createElement('br'));
+        label.appendChild(input);
+        form.appendChild(label);
+        form.appendChild(document.createElement('br'));
       });
 
-      if (errors.length > 0) {
-        errorsDiv.innerHTML = errors.map(e => `<div>${e}</div>`).join('');
-        return;
-      }
+      const submitBtn = document.createElement('button');
+      submitBtn.type = 'submit';
+      submitBtn.style.position = 'relative';
+      submitBtn.style.minWidth = '120px'; // Prevent shrinking
 
-      // Show spinner & disable button, hide text
-      spinner.style.display = 'inline-block';
-      textSpan.style.display = 'none';
-      submitBtn.disabled = true;
+      // Text inside button
+      const textSpan = document.createElement('span');
+      textSpan.textContent = 'Send';
+      textSpan.style.visibility = 'visible';
+      submitBtn.appendChild(textSpan);
 
-      try {
-        const token = await grecaptcha.execute('6LeNLFQrAAAAAE1PT3plAyvknxmEemxdQv0KrPFS', { action: 'submit' });
-        formData.append('captcha', token);
+      // Spinner
+      const spinner = document.createElement('span');
+      spinner.style.border = '2px solid #f3f3f3';
+      spinner.style.borderTop = '2px solid #7f5af0';
+      spinner.style.borderRadius = '50%';
+      spinner.style.width = '16px';
+      spinner.style.height = '16px';
+      spinner.style.animation = 'spin 1s linear infinite';
+      spinner.style.position = 'absolute';
+      spinner.style.top = '50%';
+      spinner.style.left = '50%';
+      spinner.style.transform = 'translate(-50%, -50%)';
+      spinner.style.display = 'none';
+      submitBtn.appendChild(spinner);
 
-        const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
-          method: 'POST',
-          body: formData,
+      form.appendChild(submitBtn);
+      container.appendChild(form);
+      container.appendChild(errorsDiv);
+      container.appendChild(successDiv);
+
+      form.addEventListener('submit', async e => {
+        e.preventDefault();
+        errorsDiv.textContent = '';
+        successDiv.textContent = '';
+
+        const formData = new FormData(form);
+        const MAX_FILE_SIZE = 10 * 1024 * 1024;
+        let errors = [];
+
+        fields.forEach(field => {
+          const val = formData.get(field.name);
+
+          if (field.required) {
+            if (!val || (field.type === 'file' && val.size === 0)) {
+              errors.push(`${field.label} is required.`);
+            } else if (field.type === 'email') {
+              const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+              if (!emailRegex.test(val)) {
+                errors.push('Please enter a valid email address.');
+              }
+            }
+          }
+
+          if (field.type === 'file') {
+            const file = formData.get(field.name);
+            if (file && file.size > MAX_FILE_SIZE) {
+              errors.push(`File "${file.name}" is too large. Max size is 10MB.`);
+            }
+          }
         });
 
-        const result = await res.json();
-
-        if (result.success) {
-          successDiv.textContent = result.message;
-          form.reset();
-        } else {
-          errorsDiv.textContent = result.message || 'Unknown error.';
-          console.error('Email sending error:', result.error);
+        if (errors.length > 0) {
+          errorsDiv.innerHTML = errors.map(e => `<div>${e}</div>`).join('');
+          return;
         }
-      } catch (err) {
-        errorsDiv.textContent = 'Network or server error: ' + err.message;
-      } finally {
-        spinner.style.display = 'none';
-        textSpan.style.display = 'inline';
-        submitBtn.disabled = false;
-      }
-    });
-  }
 
-  // Spinner CSS animation
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
+        // Show spinner, disable button, hide text
+        spinner.style.display = 'inline-block';
+        textSpan.style.visibility = 'hidden';
+        submitBtn.disabled = true;
+
+        try {
+          const token = await grecaptcha.execute('6LeNLFQrAAAAAE1PT3plAyvknxmEemxdQv0KrPFS', { action: 'submit' });
+          formData.append('captcha', token);
+
+          const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/', {
+            method: 'POST',
+            body: formData,
+          });
+
+          const result = await res.json();
+
+          if (result.success) {
+            successDiv.textContent = result.message;
+            form.reset();
+          } else {
+            errorsDiv.textContent = result.message || 'Unknown error.';
+            console.error('Email sending error:', result.error);
+          }
+        } catch (err) {
+          errorsDiv.textContent = 'Network or server error: ' + err.message;
+        } finally {
+          spinner.style.display = 'none';
+          textSpan.style.visibility = 'visible';
+          submitBtn.disabled = false;
+        }
+      });
     }
-  `;
-  document.head.appendChild(style);
 
-  loadForm();
-</script>
+    // Add spinner animation CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
+
+    loadForm();
+  </script>
+</body>
+</html>
