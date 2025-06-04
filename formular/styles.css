@@ -10,6 +10,14 @@ body {
   min-height: 100vh;
 }
 
+#page-container {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
 #form-container {
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(8px);
