@@ -5,6 +5,7 @@ async function loadForm() {
   const container = document.getElementById('form-container');
   const form = document.createElement('form');
   form.id = 'dynamic-form';
+  form.noValidate = true;
 
   const errorsDiv = document.createElement('div');
   errorsDiv.style.color = 'red';
@@ -19,6 +20,45 @@ async function loadForm() {
   const note = document.createElement('p');
   note.textContent = 'Položky označené hvězdičkou jsou povinné.';
   form.appendChild(note);
+
+  const inputElements = {};
+
+  const checkFormValidity = () => {
+    let isValid = true;
+    fields.forEach(field => {
+      const input = inputElements[field.name];
+      const val = input.value;
+      if (field.required) {
+        if (!val || (field.type === 'file' && input.files.length === 0)) {
+          isValid = false;
+        } else if (field.type === 'email') {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(val)) {
+            isValid = false;
+          }
+        }
+      }
+
+      if (field.type === 'file') {
+        const file = input.files[0];
+        if (file && file.size > MAX_FILE_SIZE) {
+          isValid = false;
+        }
+      }
+    });
+
+    if (isValid) {
+      submitBtn.disabled = false;
+      submitBtn.style.backgroundColor = '';
+      submitBtn.style.cursor = 'pointer';
+    } else {
+      submitBtn.disabled = true;
+      submitBtn.style.backgroundColor = '#ccc';
+      submitBtn.style.cursor = 'not-allowed';
+    }
+
+    return isValid;
+  };
 
   fields.forEach(field => {
     const wrapper = document.createElement('div');
@@ -37,6 +77,7 @@ async function loadForm() {
 
     input.name = field.name;
     if (field.required) input.required = true;
+    inputElements[field.name] = input;
 
     const errorMsg = document.createElement('div');
     errorMsg.style.color = 'red';
@@ -66,6 +107,7 @@ async function loadForm() {
       }
 
       errorMsg.textContent = error;
+      checkFormValidity();
       return error === '';
     };
 
@@ -80,6 +122,10 @@ async function loadForm() {
 
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
+  submitBtn.disabled = true;
+  submitBtn.style.backgroundColor = '#ccc';
+  submitBtn.style.cursor = 'not-allowed';
+  submitBtn.style.position = 'relative';
 
   const textSpan = document.createElement('span');
   textSpan.textContent = 'Send';
@@ -96,7 +142,7 @@ async function loadForm() {
   spinner.style.position = 'absolute';
   spinner.style.top = '50%';
   spinner.style.left = '50%';
-  spinner.style.transform = 'translate(-50%, -50%)';
+  spinner.style.transform = 'translate(-100%, -100%)';
   spinner.style.display = 'none';
   submitBtn.appendChild(spinner);
 
@@ -109,6 +155,11 @@ async function loadForm() {
     e.preventDefault();
     errorsDiv.textContent = '';
     successDiv.textContent = '';
+
+    if (submitBtn.disabled) {
+      errorsDiv.textContent = 'Formulář není vyplněn správně.';
+      return;
+    }
 
     let isValid = true;
     fields.forEach(field => {
@@ -144,6 +195,7 @@ async function loadForm() {
         successDiv.textContent = result.message;
         form.reset();
         form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        checkFormValidity(); // re-disable button
       } else {
         errorsDiv.textContent = result.message || 'Neznámá chyba.';
         console.error('Chyba při odesílání e-mailu:', result.error);
@@ -153,7 +205,7 @@ async function loadForm() {
     } finally {
       spinner.style.display = 'none';
       textSpan.style.visibility = 'visible';
-      submitBtn.disabled = false;
+      checkFormValidity();
     }
   });
 }
