@@ -16,6 +16,12 @@ async function loadForm() {
 
   const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+  const note = document.createElement('p');
+  note.textContent = 'Položky označené hvězdičkou jsou povinné.';
+  note.style.fontSize = '0.9em';
+  note.style.marginBottom = '1rem';
+  form.appendChild(note);
+
   fields.forEach(field => {
     const wrapper = document.createElement('div');
     wrapper.style.marginBottom = '1rem';
