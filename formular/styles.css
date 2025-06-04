@@ -55,6 +55,7 @@ body {
 
 form {
   width: 100%;
+  font-family: "Outfit", sans-serif;
 }
 
 label {
@@ -91,6 +92,7 @@ textarea:focus {
 }
 
 button[type="submit"] {
+  font-family: "Outfit", sans-serif;
   background: linear-gradient(135deg, #7f5af0, #5c3bba);
   color: white;
   border: none;
