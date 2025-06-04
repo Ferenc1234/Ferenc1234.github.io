@@ -136,7 +136,7 @@ async function loadForm() {
   submitBtn.type = 'submit';
   submitBtn.disabled = true;
   submitBtn.style.backgroundColor = '#ccc';
-  submitBtn.style.cursor = 'not-allowed';
+  submitBtn.style.cursor = 'pointer';
   submitBtn.style.position = 'relative';
 
   // Poznámka pod formulářem
