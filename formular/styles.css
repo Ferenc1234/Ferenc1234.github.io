@@ -1,6 +1,6 @@
 body {
   background: linear-gradient(135deg, #1A1A1D, #2c2c31);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Outfit", sans-serif;
   color: #ffffff;
   margin: 0;
   padding: 2rem;
@@ -11,6 +11,8 @@ body {
 }
 
 #page-container {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -18,7 +20,14 @@ body {
   text-align: center;
 }
 
+#page-container h1 {
+  margin-bottom: 1.5rem;
+}
+
+
+
 #form-container {
+  font-family: "Outfit", sans-serif;
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(8px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -58,6 +67,7 @@ button[type="submit"] {
 }
 
 textarea {
+  font-family: "Outfit", sans-serif;
   resize: vertical;
   min-height: 100px;
 }
