@@ -33,6 +33,11 @@ body {
   margin-bottom: 1.5rem;
 }
 
+p {
+  font-size: 0.9em;
+  margin-bottom: 1rem;
+  color: red;
+}
 
 
 #form-container {
@@ -77,6 +82,7 @@ button[type="submit"] {
   font-size: 1rem;
   margin-top: 0.25rem;
   transition: border 0.2s ease;
+  font-family: "Outfit", sans-serif;
 }
 
 textarea {

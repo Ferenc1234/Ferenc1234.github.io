@@ -18,8 +18,6 @@ async function loadForm() {
 
   const note = document.createElement('p');
   note.textContent = 'Položky označené hvězdičkou jsou povinné.';
-  note.style.fontSize = '0.9em';
-  note.style.marginBottom = '1rem';
   form.appendChild(note);
 
   fields.forEach(field => {
