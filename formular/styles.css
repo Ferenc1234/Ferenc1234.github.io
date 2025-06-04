@@ -41,7 +41,9 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: left; /* add this line */
+  justify-content: center; /* add this line to center content vertically */
+  margin: auto; /* add this line to center the div horizontally */
+  text-align: left;
 }
 
 form {
