@@ -1,3 +1,8 @@
+/* Apply box-sizing globally to prevent padding overflow */
+* {
+  box-sizing: border-box;
+}
+
 @font-face {
   font-family: 'Outfit';
   src: url('./fonts/Outfit-VariableFont_wght.ttf') format('truetype');
@@ -5,18 +10,17 @@
   font-style: normal;
 }
 
-
 body {
   background: linear-gradient(135deg, #1A1A1D, #2c2c31);
   color: #ffffff;
   margin: 0;
-  padding: 2rem;
+  padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   font-family: "Outfit", sans-serif;
-  font-weight: 400; /* Normal weight */
+  font-weight: 400;
 }
 
 #page-container {
@@ -40,7 +44,6 @@ p {
   font-style: italic;
 }
 
-
 #form-container {
   font-family: "Outfit", sans-serif;
   background: rgba(255, 255, 255, 0.02);
@@ -57,14 +60,6 @@ p {
   justify-content: center;
   margin: auto;
   text-align: left;
-  box-sizing: border-box;
-}
-
-@media (max-width: 600px) {
-  #form-container {
-    padding: 1rem;
-    margin: 0 0.5rem;
-  }
 }
 
 form {
@@ -122,7 +117,6 @@ input[type="file"]::file-selector-button:hover {
   background: linear-gradient(135deg, #9a77ff, #7152d0);
 }
 
-
 textarea {
   font-family: "Outfit", sans-serif;
   resize: vertical;
@@ -155,4 +149,18 @@ button[type="submit"]:hover {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Mobile responsive tweaks */
+@media (max-width: 600px) {
+  body {
+    padding: 0.5rem;
+  }
+
+  #form-container {
+    padding: 1rem;
+    margin: 0;
+    width: 100%;
+    max-width: none;
+  }
 }
