@@ -1,4 +1,3 @@
-// Načte definici formuláře ze serveru a vykreslí ho dynamicky
 async function loadForm() {
   const res = await fetch('https://hidden-term-c0fc.frubacek.workers.dev/');
   const fields = await res.json();
@@ -8,7 +7,6 @@ async function loadForm() {
   form.id = 'dynamic-form';
   form.noValidate = true;
 
-  
   const errorsDiv = document.createElement('div');
   errorsDiv.style.color = 'red';
   errorsDiv.style.marginTop = '1rem';
@@ -19,15 +17,40 @@ async function loadForm() {
 
   const MAX_FILE_SIZE = 10 * 1024 * 1024;
   const inputElements = {};
+  const wrapperElements = {};
+
+  const getFieldValue = (name) => {
+    const el = inputElements[name];
+    if (!el) return null;
+    if (el instanceof NodeList) {
+      const selected = Array.from(el).find(i => i.checked);
+      return selected ? selected.value : null;
+    }
+    return el.value;
+  };
+
+  const updateVisibility = () => {
+    fields.forEach(field => {
+      if (field.dependsOn) {
+        const targetValue = getFieldValue(field.dependsOn.field);
+        const wrapper = wrapperElements[field.name];
+        const shouldShow = targetValue === field.dependsOn.value;
+        wrapper.style.display = shouldShow ? '' : 'none';
+      }
+    });
+    checkFormValidity();
+  };
 
   const checkFormValidity = () => {
     let isValid = true;
 
     fields.forEach(field => {
+      const wrapper = wrapperElements[field.name];
       const input = inputElements[field.name];
-      const val = input.value;
+      const visible = wrapper.style.display !== 'none';
+      const val = input instanceof NodeList ? getFieldValue(field.name) : input.value;
 
-      if (field.required) {
+      if (field.required && visible) {
         if (!val || (field.type === 'file' && input.files.length === 0)) {
           isValid = false;
         } else if (field.type === 'email') {
@@ -36,7 +59,7 @@ async function loadForm() {
         }
       }
 
-      if (field.type === 'file') {
+      if (field.type === 'file' && visible) {
         let totalSize = 0;
         for (const file of input.files) {
           totalSize += file.size;
@@ -47,83 +70,102 @@ async function loadForm() {
       }
     });
 
-    if (isValid) {
-      submitBtn.disabled = false;
-      submitBtn.style.backgroundColor = '';
-      submitBtn.style.cursor = 'pointer';
-    } else {
-      submitBtn.disabled = true;
-      submitBtn.style.backgroundColor = '#ccc';
-      submitBtn.style.cursor = 'not-allowed';
-    }
-
+    submitBtn.disabled = !isValid;
+    submitBtn.style.backgroundColor = isValid ? '' : '#ccc';
+    submitBtn.style.cursor = isValid ? 'pointer' : 'not-allowed';
     return isValid;
   };
 
   fields.forEach(field => {
     const wrapper = document.createElement('div');
     wrapper.style.marginBottom = '1rem';
+    wrapperElements[field.name] = wrapper;
 
     const label = document.createElement('label');
     label.innerHTML = field.label + (field.required ? ' <span style="color:red">*</span>' : '') + ':';
-
-    let input;
-    if (field.type === 'textarea') {
-      input = document.createElement('textarea');
-    } else {
-      input = document.createElement('input');
-      input.type = field.type;
-    }
-
-    input.name = field.name;
-    if (field.required) input.required = true;
-    if (field.type === 'file') input.multiple = true;
-
-    inputElements[field.name] = input;
 
     const errorMsg = document.createElement('div');
     errorMsg.style.color = 'red';
     errorMsg.style.fontSize = '0.9em';
     errorMsg.className = 'error-message';
 
-    const validateField = () => {
-      const val = input.value;
-      let error = '';
+    let input;
+    if (field.type === 'radio') {
+      input = document.createDocumentFragment();
+      inputElements[field.name] = document.querySelectorAll(`input[name="${field.name}"]`);
+      field.options.forEach(opt => {
+        const radioWrapper = document.createElement('label');
+        radioWrapper.style.display = 'block';
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = field.name;
+        radio.value = opt.value;
+        radio.required = field.required;
+        radio.addEventListener('change', () => {
+          updateVisibility();
+          checkFormValidity();
+        });
+        radioWrapper.appendChild(radio);
+        radioWrapper.append(' ' + opt.label);
+        input.appendChild(radioWrapper);
+      });
+      wrapper.appendChild(label);
+      wrapper.appendChild(input);
+    } else {
+      if (field.type === 'textarea') {
+        input = document.createElement('textarea');
+      } else {
+        input = document.createElement('input');
+        input.type = field.type;
+      }
+      input.name = field.name;
+      if (field.required) input.required = true;
+      if (field.type === 'file') input.multiple = true;
 
-      if (field.required) {
-        if (!val || (field.type === 'file' && input.files.length === 0)) {
-          error = `Pole ${field.label} je povinné.`;
-        } else if (field.type === 'email') {
-          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-          if (!emailRegex.test(val)) {
-            error = 'Zadejte prosím platnou e-mailovou adresu.';
+      inputElements[field.name] = input;
+
+      const validateField = () => {
+        const val = input.value;
+        let error = '';
+        const visible = wrapper.style.display !== 'none';
+
+        if (field.required && visible) {
+          if (!val || (field.type === 'file' && input.files.length === 0)) {
+            error = `Pole ${field.label} je povinné.`;
+          } else if (field.type === 'email') {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(val)) error = 'Zadejte prosím platnou e-mailovou adresu.';
           }
         }
-      }
 
-      if (field.type === 'file') {
-        let totalSize = 0;
-        for (const file of input.files) {
-          totalSize += file.size;
+        if (field.type === 'file' && visible) {
+          let totalSize = 0;
+          for (const file of input.files) {
+            totalSize += file.size;
+          }
+          if (totalSize > MAX_FILE_SIZE) {
+            error = 'Celková velikost všech souborů přesahuje 10MB.';
+          }
         }
-        if (totalSize > MAX_FILE_SIZE) {
-          error = `Celková velikost všech souborů přesahuje 10MB.`;
-        }
-      }
 
-      errorMsg.textContent = error;
-      checkFormValidity();
-      return error === '';
-    };
+        errorMsg.textContent = error;
+        checkFormValidity();
+      };
 
-    input.addEventListener(field.type === 'file' ? 'change' : 'input', validateField);
+      input.addEventListener(field.type === 'file' ? 'change' : 'input', validateField);
 
-    label.appendChild(document.createElement('br'));
-    wrapper.appendChild(label);
-    wrapper.appendChild(input);
-    wrapper.appendChild(errorMsg);
+      label.appendChild(document.createElement('br'));
+      wrapper.appendChild(label);
+      wrapper.appendChild(input);
+      wrapper.appendChild(errorMsg);
+    }
+
     form.appendChild(wrapper);
   });
+
+  const note = document.createElement('p');
+  note.textContent = 'Položky označené hvězdičkou jsou povinné.';
+  form.appendChild(note);
 
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
@@ -131,10 +173,6 @@ async function loadForm() {
   submitBtn.style.backgroundColor = '#ccc';
   submitBtn.style.cursor = 'not-allowed';
   submitBtn.style.position = 'relative';
-
-  const note = document.createElement('p');
-  note.textContent = 'Položky označené hvězdičkou jsou povinné.';
-  form.appendChild(note);
 
   const textSpan = document.createElement('span');
   textSpan.textContent = 'Odeslat';
@@ -159,6 +197,8 @@ async function loadForm() {
   container.appendChild(errorsDiv);
   container.appendChild(successDiv);
 
+  updateVisibility();
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
     errorsDiv.textContent = '';
@@ -166,18 +206,6 @@ async function loadForm() {
 
     if (submitBtn.disabled) {
       errorsDiv.textContent = 'Formulář není vyplněn správně.';
-      return;
-    }
-
-    let isValid = true;
-    fields.forEach(field => {
-      const input = form.elements[field.name];
-      const errorMsg = input.closest('div').querySelector('.error-message');
-      if (errorMsg.textContent !== '') isValid = false;
-    });
-
-    if (!isValid) {
-      errorsDiv.textContent = 'Prosím opravte chyby výše před odesláním.';
       return;
     }
 
@@ -202,6 +230,7 @@ async function loadForm() {
         successDiv.textContent = result.message;
         form.reset();
         form.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+        updateVisibility();
         checkFormValidity();
       } else {
         errorsDiv.textContent = result.message || 'Neznámá chyba.';
@@ -216,6 +245,3 @@ async function loadForm() {
     }
   });
 }
-
-// Spuštění po načtení stránky
-loadForm();
