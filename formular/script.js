@@ -61,7 +61,6 @@ async function loadForm() {
       submitBtn.disabled = true;
       submitBtn.style.backgroundColor = '#ccc';
       submitBtn.style.cursor = 'not-allowed';
-      errorsDiv.textContent = 'Prosím opravte chyby výše před odesláním.';
     }
 
     return isValid;
@@ -162,7 +161,7 @@ async function loadForm() {
   spinner.style.position = 'absolute';
   spinner.style.top = '50%';
   spinner.style.left = '50%';
-  spinner.style.transform = 'translate(-100%, -100%)';
+  spinner.style.transform = 'translate(-50%, -50%)';
   spinner.style.display = 'none';
   submitBtn.appendChild(spinner);
 
