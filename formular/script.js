@@ -161,7 +161,6 @@ async function loadForm() {
   spinner.style.position = 'absolute';
   spinner.style.top = '50%';
   spinner.style.left = '50%';
-  spinner.style.transform = 'translate(-50%, -50%)';
   spinner.style.display = 'none';
   submitBtn.appendChild(spinner);
 
