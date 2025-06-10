@@ -56,6 +56,13 @@ async function loadForm() {
         } else if (field.type === 'email') {
           const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           if (!emailRegex.test(val)) isValid = false;
+        } else if (field.type === 'radio') {
+          const selected = Array.from(input).find(i => i.checked);
+          if (!selected) isValid = false;
+        }
+        if (field.type === 'checkbox') {
+          const checked = Array.from(input).some(i => i.checked);
+          if (!checked) isValid = false;
         }
       }
 
