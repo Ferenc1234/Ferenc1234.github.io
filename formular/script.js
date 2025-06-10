@@ -105,7 +105,6 @@ async function loadForm() {
           updateVisibility();
           checkFormValidity();
         });
-        radio.dispatchEvent(new Event('change'));
         
         radioWrapper.appendChild(radio);
         radioWrapper.append(' ' + opt.label);
@@ -155,7 +154,6 @@ async function loadForm() {
       };
 
       input.addEventListener(field.type === 'file' ? 'change' : 'input', validateField);
-      validateField();
 
       label.appendChild(document.createElement('br'));
       wrapper.appendChild(label);
@@ -201,7 +199,6 @@ async function loadForm() {
   container.appendChild(successDiv);
 
   updateVisibility();
-  checkFormValidity(); 
 
 
   form.addEventListener('submit', async e => {
