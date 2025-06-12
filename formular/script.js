@@ -98,28 +98,36 @@ async function loadForm() {
 
     let input;
     if (field.type === 'radio') {
-      input = document.createDocumentFragment();
-      inputElements[field.name] = document.querySelectorAll(`input[name="${field.name}"]`);
+      const fragment = document.createDocumentFragment();
       field.options.forEach(opt => {
         const radioWrapper = document.createElement('label');
         radioWrapper.style.display = 'block';
+
         const radio = document.createElement('input');
         radio.type = 'radio';
         radio.name = field.name;
         radio.value = opt.value;
         radio.required = field.required;
+
         radio.addEventListener('change', () => {
           updateVisibility();
           checkFormValidity();
         });
-        
+
         radioWrapper.appendChild(radio);
         radioWrapper.append(' ' + opt.label);
-        input.appendChild(radioWrapper);
+        fragment.appendChild(radioWrapper);
       });
+
       wrapper.appendChild(label);
-      wrapper.appendChild(input);
-    } else {
+      wrapper.appendChild(fragment);
+
+      // ✅ Only assign after radios are in DOM
+      setTimeout(() => {
+        inputElements[field.name] = form.querySelectorAll(`input[name="${field.name}"]`);
+      });
+    }
+    else {
       if (field.type === 'textarea') {
         input = document.createElement('textarea');
       } else {
