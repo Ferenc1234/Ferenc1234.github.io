@@ -214,7 +214,9 @@ async function loadForm() {
   container.appendChild(errorsDiv);
   container.appendChild(successDiv);
 
+  setTimeout(() => {
   updateVisibility();
+});
 
 
   form.addEventListener('submit', async e => {
