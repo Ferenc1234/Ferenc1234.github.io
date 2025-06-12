@@ -101,7 +101,8 @@ async function loadForm() {
       const fragment = document.createDocumentFragment();
       field.options.forEach(opt => {
         const radioWrapper = document.createElement('label');
-        radioWrapper.style.display = 'block';
+        radioWrapper.className = 'radio-wrapper';
+
 
         const radio = document.createElement('input');
         radio.type = 'radio';
