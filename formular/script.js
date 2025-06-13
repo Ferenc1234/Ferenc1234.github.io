@@ -207,6 +207,7 @@ async function loadForm() {
   spinner.style.top = '50%';
   spinner.style.left = '50%';
   spinner.style.display = 'none';
+  spinner.style.transform = 'translate(-50%, -50%)';
   submitBtn.appendChild(spinner);
 
   form.appendChild(submitBtn);
