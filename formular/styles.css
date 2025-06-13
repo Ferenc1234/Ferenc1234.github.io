@@ -177,11 +177,19 @@ input[type="radio"]:hover {
 .radio-wrapper {
   display: flex;
   align-items: center;
-  margin-bottom: 0.8rem;
   gap: 0.5rem;
-  font-size: 1rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
   cursor: pointer;
   color: #eee;
+  padding: 0.6rem 0.8rem; /* match input padding */
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+}
+
+.radio-wrapper:hover {
+  background-color: rgba(255, 255, 255, 0.03);
 }
 
 button[type="submit"] {
