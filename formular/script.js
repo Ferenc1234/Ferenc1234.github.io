@@ -15,6 +15,10 @@ async function loadForm() {
   successDiv.style.color = 'lightgreen';
   successDiv.style.marginTop = '1rem';
 
+    const note = document.createElement('p');
+  note.textContent = 'Položky označené hvězdičkou jsou povinné.';
+  form.appendChild(note);
+
   const MAX_FILE_SIZE = 10 * 1024 * 1024;
   const inputElements = {};
   const wrapperElements = {};
@@ -180,9 +184,7 @@ async function loadForm() {
     form.appendChild(wrapper);
   });
 
-  const note = document.createElement('p');
-  note.textContent = 'Položky označené hvězdičkou jsou povinné.';
-  form.appendChild(note);
+
 
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
