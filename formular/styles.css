@@ -184,23 +184,24 @@ input[type="radio"]:hover {
   color: #eee;
 }
 
-/* Submit button */
 button[type="submit"] {
   font-family: "Outfit", sans-serif;
   background: linear-gradient(135deg, #7f5af0, #5c3bba);
   color: white;
   border: none;
+  border-radius: 10%;
   padding: 0.8rem 1.5rem;
   margin-top: 1rem;
   cursor: pointer;
   transition: background 0.3s ease;
   position: relative;
   min-width: 120px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 button[type="submit"]:hover {
   background: linear-gradient(135deg, #9a77ff, #7152d0);
-  box-shadow: 0 6px 14px rgba(127, 90, 240, 0.35);
 }
 
 /* Tooltip-ready icon placeholder */
